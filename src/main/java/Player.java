@@ -1,4 +1,6 @@
 public class Player extends GameCharacter{
-    //todo: movement with arrow keys
+    public Player(int x, int y){
+        super(x, y);
+    }
 
 }
