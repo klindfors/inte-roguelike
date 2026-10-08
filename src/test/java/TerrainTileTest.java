@@ -1,3 +1,3 @@
 public class TerrainTileTest {
-    //todo: all
+    //possibly not relevant for testing as the class is abstract. revisit.
 }
