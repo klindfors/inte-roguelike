@@ -2,9 +2,12 @@ import org.hamcrest.core.CombinableMatcher;
 import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import java.util.Random;
+
+
 
 public class RoomTest {
-    Room testRoom = new Room("test", 40, 37);
+    Room testRoom = new Room("test", 40, 37, new Random()); //randomised door placement every test run
 
     @Test
     void illegalRoom(){
