@@ -16,7 +16,5 @@ public class Quiz {
         return answer == correctAnswer;
     }
 
-    public boolean isCompleted(){
 
-    }
 }

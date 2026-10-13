@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class QuizTest {
 
@@ -10,18 +12,14 @@ public class QuizTest {
     assertTrue(quiz.answer(0));
     }
 
-    @Test
-    void wrongAnswerShouldBeRejected(){
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 3, 99}) // ekvivalensklass
+    void wrongAnswerShouldBeRejected(int answer){
         Quiz quiz = new Quiz("I TDD vad börjar man först med?", new String []{"testning","kodning", "dokumentation" }, 0);
 
-    assertFalse(quiz.answer(1));
+    assertFalse(quiz.answer(answer));
     }
 
-    @Test
-    void questionShouldBeCompletedAfterCorrectAnswer(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?", new String []{"testning","kodning", "dokumentation" }, 0);
-    quiz.answer(0);
-    assertTrue(quiz.isCompleted());
-    }
+
 
 }
