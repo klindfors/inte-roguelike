@@ -10,6 +10,7 @@ public class Player extends GameCharacter{
     public int getPhysicalHealth(){
         return physicalHealth;
     }
+
     public int getMentalHealth(){
         return mentalHealth;
     }
@@ -21,6 +22,26 @@ public class Player extends GameCharacter{
     public void takeMentalDamage(int amount){
         mentalHealth = Math.max(0, mentalHealth - amount);
     }
+
+    public void restoreMentalHealth(int amount){
+        mentalHealth = Math.min(5,  mentalHealth + amount);
+    }
+
+    public boolean isMentalBreakdown(){
+        return getMentalHealth() <= 0;
+    }
+
+    public void restorePhysicalHealth(int amount){
+        physicalHealth = Math.min(5, physicalHealth + amount);
+    }
+
+    public boolean isDead(){
+        return getPhysicalHealth() == 0;
+    }
+
+
+
+
 
 
 
