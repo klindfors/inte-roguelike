@@ -3,6 +3,7 @@ public class Quiz {
     private String question;
     private String [] answers;
     private int correctAnswer;
+    private boolean isCompleted;
 
 
     public Quiz (String question, String [] answers, int correctAnswer ){
@@ -13,8 +14,8 @@ public class Quiz {
     }
 
     public boolean answer(int answer){
+        if (answer==correctAnswer) isCompleted = true;
         return answer == correctAnswer;
     }
-
 
 }
