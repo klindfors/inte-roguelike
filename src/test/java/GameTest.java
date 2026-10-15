@@ -1,10 +1,16 @@
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class GameTest {
 
-@Test
-    public void shouldCreateAMap(){
+    @Test
+    void startingGameChangesStateToRunning() {
+        Game game = new Game();
 
-}
+        game.start();
+
+        assertEquals(GameState.RUNNING, game.getState());
+    }
 
 }
