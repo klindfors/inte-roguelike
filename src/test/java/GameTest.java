@@ -13,4 +13,13 @@ public class GameTest {
         assertEquals(GameState.RUNNING, game.getState());
     }
 
+    @Test
+    void newGameShouldNotBeStarted() {
+        Game game = new Game();
+
+        assertEquals(GameState.NOT_STARTED, game.getState());
+    }
+
+
+
 }
