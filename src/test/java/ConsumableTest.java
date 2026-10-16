@@ -7,9 +7,9 @@ public class ConsumableTest {
     @Test
     void consumableAffectsPlayerPhysicalHealth(){
         Player player = new Player(0, 0);
-        player.takePhysicalDamage(3);
+        player.takePhysicalDamage(4);
 
-        Consumable consumable = new Consumable(2, 0); // Phy, ment
+        Consumable consumable = new Consumable(ConsumableType.SANDWICH); 
 
         consumable.use(player);
         assertEquals(player.getPhysicalHealth(), 4);
@@ -18,9 +18,9 @@ public class ConsumableTest {
     @Test
     void consumableAffectsPlayerMentalHealth(){
         Player player = new Player(0, 0);
-        player.takeMentalDamage(3);
+        player.takeMentalDamage(4);
 
-        Consumable consumable = new Consumable(0, 2); // Phy, ment
+        Consumable consumable = new Consumable(ConsumableType.COFFEE); // Phy, ment
 
         consumable.use(player);
         assertEquals(player.getMentalHealth(), 4);
@@ -32,10 +32,10 @@ public class ConsumableTest {
         player.takePhysicalDamage(4);
         player.takeMentalDamage(3);
 
-        Consumable consumable = new Consumable(3, 1);
+        Consumable consumable = new Consumable(ConsumableType.SPORTLUNCH);
 
         consumable.use(player);
-        assertEquals(player.getPhysicalHealth(), 4);
-        assertEquals(player.getMentalHealth(), 3);
+        assertEquals(player.getPhysicalHealth(), 3);
+        assertEquals(player.getMentalHealth(), 4);
     }
 }
