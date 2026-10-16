@@ -15,7 +15,7 @@ public class Quiz {
             throw new IllegalArgumentException("Index för rätt svar är ogiltigt");
         }
             this.question = question;
-            this.answers = answers;
+            this.answers = answers.clone();
             this.correctAnswer = correctAnswer;
             this.level = 0;
 

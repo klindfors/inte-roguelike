@@ -51,6 +51,41 @@ public class QuizTest {
         assertEquals(0, quiz.getLevel());
     }
 
+    @Test
+    void nullQuestionShouldBeRejected(){
+        assertThrows(IllegalArgumentException.class,()->{
+            new Quiz(null, new String[]{"Ja", "Nej"}, 0);
+        });
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 3, 99})
+    void invalidCorrectAnswerIndexShouldBeRejected(int index){
+        assertThrows(IllegalArgumentException.class, ()->{
+        new Quiz("Vad är Java?", new String[]{"Språk", "Databas", "Operativsystem"},
+                index
+        );
+    });
+    }
+
+    @Test
+    void getQuestionShouldReturnCorrectQuestion(){
+        Quiz quiz = new Quiz(
+                "Vad är Java?",
+                new String[]{"Språk", "Databas", "Operativsystem"},0
+        );
+        assertEquals("Vad är Java?", quiz.getQuestion());
+    }
+
+    @Test
+    void changingOriginalAnswersShouldNotAffectQuiz(){
+        String [] answers = {"Språk", "Databas", "Operativsystem"};
+        Quiz quiz = new Quiz("Vad är Java?",answers, 0);
+
+        answers[0] = "Ändrat svar";
+        assertEquals("Språk", quiz.getAnswers()[0]);
+    }
+
 
 
 }
