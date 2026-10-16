@@ -1,4 +1,5 @@
 import org.hamcrest.core.CombinableMatcher;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -10,11 +11,17 @@ import java.util.Random;
 public class RoomTest {
     Room testRoom = new Room("test", 40, 37, new Random()); //randomised door placement every test run
 
+    //possibly exchange for parameterised tests
     @Test
     void illegalRoom() {
         assertThrows(IllegalArgumentException.class, () -> new Room("Small width", 2, 5, new Random()));
-        assertThrows(IllegalArgumentException.class, () -> new Room("Small height", 4, 1, new Random()));
+        assertThrows(IllegalArgumentException.class, () -> new Room("Small height", 4, 2, new Random()));
         assertThrows(IllegalArgumentException.class, () -> new Room("Both too small", 2, 2, new Random()));
+    }
+
+    @Test
+    @Disabled("todo: test for legal rooms")
+    void legalRoom() {
     }
 
     @Test
@@ -69,11 +76,17 @@ public class RoomTest {
     }
 
     @Test
+    @Disabled("todo: test for reachable doors (non-corner positions)")
+    void atLeastOneDoorOnNonCorner() {}
+
+    @Test
     void noTileIsNull() {
         for (TerrainTile[] a : testRoom.roomMatrix()) {
-            for (TerrainTile t : a) //yikes for ordo value
+            for (TerrainTile t : a)
                 assertThat(t, is(notNullValue()));
         }
         //todo: no tiles in the room are null. all are some kind of terraintile.
     }
+
+
 }
