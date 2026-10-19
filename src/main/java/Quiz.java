@@ -4,10 +4,11 @@ public class Quiz {
     private String [] answers;
     private int correctAnswer;
     private int level;
+    private Difficulty difficulty;
 
 
-    public Quiz (String question, String [] answers, int correctAnswer ){
-        if(question == null || answers == null || answers.length == 0 ) {
+    public Quiz (String question, String [] answers, int correctAnswer,Difficulty difficulty ){
+        if(question == null || answers == null || answers.length == 0 || difficulty == null ) {
             throw new IllegalArgumentException("Frågor och svar måste finnas");
         }
 
@@ -17,6 +18,7 @@ public class Quiz {
             this.question = question;
             this.answers = answers.clone();
             this.correctAnswer = correctAnswer;
+            this.difficulty = difficulty;
             this.level = 0;
 
     }
@@ -44,6 +46,10 @@ public class Quiz {
 
     public int getLevel(){
         return level;
+    }
+
+    public Difficulty getDifficulty(){
+        return difficulty;
     }
 
 

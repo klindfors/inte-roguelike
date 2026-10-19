@@ -11,13 +11,15 @@ public class QuizBank {
         quizzes.add(new Quiz(
                 "Vad börjar man med i TDD?",
                 new String[]{"Kodning", "Testning", "Dokumentation"},
-                1
+                1,
+                Difficulty.EASY
         ));
 
         quizzes.add(new Quiz(
                 "Vad börjar man med i TDD?",
                 new String[]{"Kodning", "Testning", "Dokumentation"},
-                1
+                1,
+                Difficulty.MEDIUM
         ));
 
         quizzes.add(new Quiz(
@@ -25,9 +27,17 @@ public class QuizBank {
                 new String[]{"Ett test av hela systemet",
                 "Ett test av en isolerad del av systemet",
                 "Ett test av användergränsnittents desgin"},
-                1
+                1,
+                Difficulty.HARD
         ));
 
         return quizzes;
+    }
+
+    public List<Quiz> getQuizzesByDifficulty(List<Quiz> quizzes,Difficulty difficulty){
+
+        return quizzes.stream()
+                .filter(q-> q.getDifficulty() == difficulty)
+                .toList();
     }
 }
