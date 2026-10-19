@@ -49,4 +49,6 @@ public class QuizBankTest {
         assertEquals(3, quiz.getAnswers().length);
 
     }
+
+    //TODO test/ metod som bara returnerar frågor med den efterfrågade svårighetsgraden
 }
