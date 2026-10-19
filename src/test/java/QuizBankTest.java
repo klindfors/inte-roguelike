@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static java.util.Locale.filter;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class QuizBankTest {
@@ -32,5 +33,20 @@ public class QuizBankTest {
     void createQuizzesShouldReturnMultipleQuestions(){
         List<Quiz> quizzes = QuizBank.createQuizzes();
         assertTrue(quizzes.size() >= 2);
+    }
+
+    @Test
+    void unitTestQuestionShouldHaveThreeAnswers(){
+        List<Quiz> quizzes = QuizBank.createQuizzes();
+
+        Quiz quiz = quizzes.stream()
+        .filter(q->q.getQuestion().equals(
+                "Vad är ett enhetstest?"
+                ))
+                .findFirst()
+                .orElseThrow();
+
+        assertEquals(3, quiz.getAnswers().length);
+
     }
 }

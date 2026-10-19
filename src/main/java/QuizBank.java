@@ -20,6 +20,14 @@ public class QuizBank {
                 1
         ));
 
+        quizzes.add(new Quiz(
+                "Vad är ett enhetstest?",
+                new String[]{"Ett test av hela systemet",
+                "Ett test av en isolerad del av systemet",
+                "Ett test av användergränsnittents desgin"},
+                1
+        ));
+
         return quizzes;
     }
 }
