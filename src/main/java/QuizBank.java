@@ -34,7 +34,7 @@ public class QuizBank {
         return quizzes;
     }
 
-    public List<Quiz> getQuizzesByDifficulty(List<Quiz> quizzes,Difficulty difficulty){
+    public static List<Quiz> getQuizzesByDifficulty(List<Quiz> quizzes,Difficulty difficulty){
 
         return quizzes.stream()
                 .filter(q-> q.getDifficulty() == difficulty)

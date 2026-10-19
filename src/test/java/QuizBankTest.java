@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Locale.filter;
@@ -49,6 +50,29 @@ public class QuizBankTest {
         assertEquals(3, quiz.getAnswers().length);
 
     }
+    @Test
+    void quizShouldReturnOnlyAskedDifficulty(){
+        List<Quiz> quizzes = QuizBank.createQuizzes();
+        List<Quiz> easyQuizzes = QuizBank.getQuizzesByDifficulty(quizzes, Difficulty.EASY);
+        assertTrue(easyQuizzes.stream()
+                .allMatch(q->q.getDifficulty() == Difficulty.EASY));
 
-    //TODO test/ metod som bara returnerar frågor med den efterfrågade svårighetsgraden
+    }
+
+    @Test
+    void difficultyQuizShouldNotReturnNull(){
+        List<Quiz> quizzes = QuizBank.createQuizzes();
+        List<Quiz> easyQuizzes = QuizBank.getQuizzesByDifficulty(quizzes,Difficulty.EASY);
+        assertFalse(easyQuizzes.isEmpty());
+    }
+
+    @Test
+    void emptyListShouldReturnEmptyQuiz() {
+        List<Quiz> quizzes = new ArrayList<>();
+        List<Quiz> emptyQuiz = QuizBank.getQuizzesByDifficulty(quizzes, Difficulty.MEDIUM);
+        assertTrue(emptyQuiz.isEmpty());
+
+    }
+
+
 }
