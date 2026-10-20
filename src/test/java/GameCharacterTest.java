@@ -125,6 +125,33 @@ class GameCharacterTest {
                 () -> character.restoreMentalHealth(-1));
     }
 
+    @Test
+    void negativeMaxPhysicalHealthThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new TestCharacter(2, 3, -5, 8) );
+    }
+
+    @Test
+    void negativeMaxMentalHealthThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new TestCharacter(2, 3, 10, -5));
+    }
+
+    @Test
+    void zeroPhysicalDamageDoesNotChangeHealth() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.takePhysicalDamage(0);
+        assertEquals(5,character.getPhysicalHealth());
+    }
+
+    @Test
+    void zeroPhysicalRestorationDoesNotChangeHealth() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.takePhysicalDamage(2);
+        character.restorePhysicalHealth(0);
+        assertEquals(3,character.getPhysicalHealth());
+    }
+
     private static class TestCharacter extends GameCharacter {
 
         private TestCharacter(int x, int y) {

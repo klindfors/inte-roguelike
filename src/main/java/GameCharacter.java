@@ -11,6 +11,8 @@ public abstract class GameCharacter {
     }
 
     public GameCharacter(int x, int y, int maxPhysicalHealth, int maxMentalHealth){
+        validateNonNegative(maxPhysicalHealth);
+        validateNonNegative(maxMentalHealth);
         this.x = x;
         this.y = y;
         this.physicalHealth = maxPhysicalHealth;
@@ -44,26 +46,26 @@ public abstract class GameCharacter {
     }
 
     public void takePhysicalDamage(int amount){
-        validateAmount(amount);
+        validateNonNegative(amount);
         physicalHealth = Math.max(0, physicalHealth - amount);
     }
 
     public void restorePhysicalHealth(int amount) {
-        validateAmount(amount);
+        validateNonNegative(amount);
         physicalHealth = Math.min(maxPhysicalHealth, physicalHealth + amount);
     }
 
     public void takeMentalDamage(int amount) {
-        validateAmount(amount);
+        validateNonNegative(amount);
         mentalHealth = Math.max(0, mentalHealth - amount);
     }
 
     public void restoreMentalHealth(int amount) {
-        validateAmount(amount);
+        validateNonNegative(amount);
         mentalHealth = Math.min(maxMentalHealth, mentalHealth + amount);
     }
 
-    private void validateAmount(int amount){
+    private void validateNonNegative(int amount){
         if(amount < 0){
             throw new IllegalArgumentException("Invalid amount");
         }
