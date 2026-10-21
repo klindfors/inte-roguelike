@@ -25,4 +25,9 @@ public class Game {
             gameState = GameState.LOST;
         }
     }
+
+    public void tryAdvanceLevel(boolean quizCompleted,
+                                boolean onLadder,
+                                boolean finalLevel) {
+    }
 }

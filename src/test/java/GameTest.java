@@ -62,6 +62,19 @@ public class GameTest {
         assertEquals(GameState.RUNNING, game.getState());
     }
 
+    @Test
+    void incompleteQuizShouldPreventWinning() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        Game game = new Game(player);
+        game.start();
+
+        game.tryAdvanceLevel(false, true, true);
+
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
 
 
 }
