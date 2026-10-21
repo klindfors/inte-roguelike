@@ -34,6 +34,11 @@ public class LevelMapTest {
     }
 
     @Test
+    @Disabled("todo: check if a tile on the map is passable")
+    void isPassable() {
+    }
+
+    @Test
     @Disabled("todo: no null tiles next to floor or door tiles; must be contained by walls/doors.")
     void noNullNextToFloor() {
         for (TerrainTile[] a : testLvl1.getLevel()) {
