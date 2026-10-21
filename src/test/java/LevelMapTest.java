@@ -1,5 +1,5 @@
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -34,8 +34,13 @@ public class LevelMapTest {
     }
 
     @Test
-    @Disabled("todo: check if a tile on the map is passable")
     void isPassable() {
+        assertThat(testLvl1.getTile(2,3).getClass(), not(Wall.class));
+
+        //also needs to check that tile is not a closed door; needs door implementation to write proper test.
+        assertThat(testLvl1.getTile(2,3).getClass(), not(Door.class)); //now false for all doors.
+
+        //additionally needs to check if an NPC is situated on the coordinates; possibly better suited in another test class, ie GUI or Game
     }
 
     @Test
