@@ -18,4 +18,11 @@ public class Game {
     public GameState getState() {
         return gameState;
     }
+
+
+    public void updateState() {
+        if (gameState == GameState.RUNNING && player.isDead()) {
+            gameState = GameState.LOST;
+        }
+    }
 }
