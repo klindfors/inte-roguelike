@@ -49,6 +49,19 @@ public class GameTest {
         assertEquals(GameState.LOST, game.getState());
     }
 
+    @Test
+    void livingPlayerShouldKeepGameRunningAfterUpdate() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        Game game = new Game(player);
+        game.start();
+
+        game.updateState();
+
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
 
 
 }
