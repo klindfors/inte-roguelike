@@ -16,6 +16,7 @@ public class Game {
 
 
     public void start() {
+        currentLevel = levelMapFactory.create(currentLevelNumber);
         gameState = GameState.RUNNING;
     }
 

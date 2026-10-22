@@ -147,6 +147,38 @@ public class GameTest {
         assertEquals(GameState.RUNNING, game.getState());
     }
 
+    @Test
+    void startingGameShouldGenerateFirstLevel() {
+        Player player = mock(Player.class);
+        LevelMapFactory factory = mock(LevelMapFactory.class);
+        LevelMap firstLevel = mock(LevelMap.class);
+
+        when(factory.create(1)).thenReturn(firstLevel);
+
+        Game game = new Game(player, factory);
+        game.start();
+
+        verify(factory).create(1);
+        assertSame(firstLevel, game.getCurrentLevel());
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
+    @Test
+    void winningShouldNotGenerateAnotherLevel() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        LevelMapFactory factory = mock(LevelMapFactory.class);
+        Game game = new Game(player, factory);
+        game.start();
+
+        game.tryAdvanceLevel(true, true, true);
+
+        assertEquals(GameState.WON, game.getState());
+        verify(factory).create(1);
+        verifyNoMoreInteractions(factory);
+    }
+
 
 
 
