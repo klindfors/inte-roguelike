@@ -6,10 +6,19 @@ public class Inventory {
     // public Inventory(){};
 
     public void add(Item item){
-        inventory.add(item);
+        if (inventory.size() < 5){
+            inventory.add(item);
+        }
+        else{
+            return;
+        }
     }
 
     public void useItem(int index, Player player){
         inventory.get(index).use(player);
+    }
+
+    public int getSize(){
+        return inventory.size();
     }
 }

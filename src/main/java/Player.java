@@ -19,9 +19,17 @@ public class Player extends GameCharacter{
     }
 
     public void  useMentalConsumable(){
-        inventory.useItem(0, this);
+        inventory.useItem(0, this); // Fullösning
     }
 
+    public void usePhysicalConsumable(){
+        inventory.useItem(0, this); // Fullösning
+    }
+
+    public int numOfItemsInInv(){
+        return inventory.getSize();
+    }
+    
     @Override
     public void restorePhysicalHealth(int amount) {
         if(amount < 0){

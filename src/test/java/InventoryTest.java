@@ -17,10 +17,26 @@ public class InventoryTest {
     }
 
     @Test 
-    @Disabled 
+    void usingPhysicalConsumableWorks(){
+        Player player = new Player(0, 0);
+        player.pickUp(new Consumable(ConsumableType.SANDWICH));
+        player.takePhysicalDamage(4);
+        player.usePhysicalConsumable();
+
+        assertEquals(player.getPhysicalHealth(), 4);
+    }
+
+    @Test 
     void cantAddMoreThanFiveItems(){
         Player player = new Player(0, 0);
         player.pickUp(new Consumable(ConsumableType.COFFEE));        
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        
+        assertEquals(player.numOfItemsInInv(), 5);
         
     }
     
