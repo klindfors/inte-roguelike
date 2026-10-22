@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GameCharacterTest {
 
@@ -94,6 +95,61 @@ class GameCharacterTest {
         character.takePhysicalDamage(3);
         character.restorePhysicalHealth(2);
         assertEquals(4, character.getPhysicalHealth());
+    }
+
+    @Test
+    void negativePhysicalDamageThrowsException(){
+        GameCharacter character = new TestCharacter(2, 3);
+        assertThrows(IllegalArgumentException.class,
+                () -> character.takePhysicalDamage(-1));
+    }
+
+    @Test
+    void negativeMentalDamageThrowsException() {
+        TestCharacter character = new TestCharacter(2, 3);
+        assertThrows(IllegalArgumentException.class,
+                ()-> character.takeMentalDamage(-1));
+    }
+
+    @Test
+    void negativePhysicalRestorationThrowsException() {
+        TestCharacter character = new TestCharacter(2, 3);
+        assertThrows(IllegalArgumentException.class,
+                () -> character.restorePhysicalHealth(-1));
+    }
+
+    @Test
+    void negativeMentalRestorationThrowsException() {
+        TestCharacter character = new TestCharacter(2, 3);
+        assertThrows(IllegalArgumentException.class,
+                () -> character.restoreMentalHealth(-1));
+    }
+
+    @Test
+    void negativeMaxPhysicalHealthThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new TestCharacter(2, 3, -5, 8) );
+    }
+
+    @Test
+    void negativeMaxMentalHealthThrowsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new TestCharacter(2, 3, 10, -5));
+    }
+
+    @Test
+    void zeroPhysicalDamageDoesNotChangeHealth() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.takePhysicalDamage(0);
+        assertEquals(5,character.getPhysicalHealth());
+    }
+
+    @Test
+    void zeroPhysicalRestorationDoesNotChangeHealth() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.takePhysicalDamage(2);
+        character.restorePhysicalHealth(0);
+        assertEquals(3,character.getPhysicalHealth());
     }
 
     private static class TestCharacter extends GameCharacter {

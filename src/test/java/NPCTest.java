@@ -12,7 +12,8 @@ public class NPCTest {
 
     @Test
     void npcShouldHaveQuiz(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?", new String[]{"testning", "kodning", "dokumentation"},0);
+        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
+                new String[]{"testning", "kodning", "dokumentation"},0,Difficulty.EASY);
         NPC npc = new NPC(0,0,"Hej!", quiz);
         assertSame(quiz, npc.getQuiz());
     }
@@ -20,7 +21,7 @@ public class NPCTest {
     @Test
     void npcShouldAcceptCorrectAnswer(){
         Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"}, 0);
+                new String[]{"testning", "kodning", "dokumentation"}, 0,Difficulty.EASY);
         NPC npc = new NPC(0,0,"Hej!", quiz);
         assertTrue(npc.answerQuestion(0));
     }
@@ -28,7 +29,7 @@ public class NPCTest {
     @Test
     void npcShouldOnlyAllowOneAnswerAttempt(){
         Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"},0
+                new String[]{"testning", "kodning", "dokumentation"},0,Difficulty.EASY
         );
         NPC npc = new NPC(0,0,"Hej!", quiz);
         npc.answerQuestion(1);
@@ -38,7 +39,8 @@ public class NPCTest {
     @Test
     void npcShouldShowDialogueAfterCorrectAnswer() {
         Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"}, 0);
+                new String[]{"testning", "kodning", "dokumentation"}, 0,
+                Difficulty.EASY);
 
         NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig", quiz);
         npc.answerQuestion(0);
@@ -49,7 +51,7 @@ public class NPCTest {
     void npcShouldShowDialougeAfterWrongAnswer(){
         Quiz quiz = new Quiz("I TDD vad börjar man först med?",
                 new String[]{"testning", "kodning", "dokumentation"},
-                0);
+                0,Difficulty.EASY);
         NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig.", quiz);
         npc.answerQuestion(1);
         assertEquals("Fel svar! Du har förlorat ditt försök.", npc.getDialogue());
@@ -60,7 +62,7 @@ public class NPCTest {
     void npcShouldKeepDialogueAfterSecondAttempt(){
         Quiz quiz = new Quiz("I TDD vad börjar man först med?",
                 new String[]{"testning", "kodning", "dokumentation"},
-                0);
+                0,Difficulty.EASY);
         NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig.", quiz);
         npc.answerQuestion(1);
         boolean secondAttempt = npc.answerQuestion(0);

@@ -13,5 +13,15 @@ public class Player extends GameCharacter{
         return getPhysicalHealth() == 0;
     }
 
+    @Override
+    public void restorePhysicalHealth(int amount) {
+        if(amount < 0){
+            throw new IllegalArgumentException("Cannot restore health from negative amount");
+        }
+        if(!isDead()){
+            super.restorePhysicalHealth(amount);
+        }
+    }
+
 
 }

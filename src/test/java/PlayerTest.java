@@ -47,4 +47,22 @@ public class PlayerTest {
         assertTrue(player.isMentalBreakdown());
         assertFalse(player.isDead());
     }
+
+    @Test
+    void deadPlayerCannotRestorePhysicalHealth() {
+        Player player = new Player(2, 3);
+        player.takePhysicalDamage(5);
+        player.restorePhysicalHealth(3);
+        assertEquals(0,player.getPhysicalHealth());
+        assertTrue(player.isDead());
+    }
+
+    @Test
+    void alivePlayerCanRestorePhysicalHealth() {
+        Player player = new Player(2, 3);
+        player.takePhysicalDamage(2);
+        player.restorePhysicalHealth(1);
+        assertEquals(4,player.getPhysicalHealth());
+        assertFalse(player.isDead());
+    }
 }

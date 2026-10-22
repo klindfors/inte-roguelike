@@ -1,12 +1,14 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class GameTest {
 
     @Test
     void startingGameChangesStateToRunning() {
-        Game game = new Game();
+        Player player = mock(Player.class);
+        Game game = new Game(player);
 
         game.start();
 
@@ -15,9 +17,62 @@ public class GameTest {
 
     @Test
     void newGameShouldNotBeStarted() {
-        Game game = new Game();
+        Player player = mock(Player.class);
+        Game game = new Game(player);
 
         assertEquals(GameState.NOT_STARTED, game.getState());
+    }
+
+    @Test
+    void livingPlayerShouldLeaveGameRunning() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        Game game = new Game(player);
+        game.start();
+
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
+    @Test
+    void playerDyingShouldEndRunningGame() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        Game game = new Game(player);
+        game.start();
+
+        // Simulate the player dying after the game starts.
+        when(player.isDead()).thenReturn(true);
+        game.updateState();
+
+        assertEquals(GameState.LOST, game.getState());
+    }
+
+    @Test
+    void livingPlayerShouldKeepGameRunningAfterUpdate() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        Game game = new Game(player);
+        game.start();
+
+        game.updateState();
+
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
+    @Test
+    void incompleteQuizShouldPreventWinning() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+
+        Game game = new Game(player);
+        game.start();
+
+        game.tryAdvanceLevel(false, true, true);
+
+        assertEquals(GameState.RUNNING, game.getState());
     }
 
 
