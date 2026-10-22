@@ -22,6 +22,13 @@ public class NPC extends GameCharacter{
     public Quiz getQuiz(){
         return quiz;
     }
+
+    // Kontrollerar om spelaren redan har svarat på NPC:ns fråga.
+    // Används för att undvika att spelaren får mental skada flera gånger för samma fråga.
+    public boolean hasAnsweredQuestion() {
+        return hasAnswered;
+    }
+
     public boolean answerQuestion(int answer){
         if (hasAnswered){
             return false;
