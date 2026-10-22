@@ -75,8 +75,23 @@ public class RoomTest {
     }
 
     @Test
-    @Disabled("todo: test for reachable doors (non-corner positions)")
-    void atLeastOneDoorOnNonCorner() {}
+    void atLeastOneDoorOnNonCorner() {
+        int w = 5;
+        int h = 8;
+        for (int seed = 0; seed < 500; seed++) {//check rooms for many different seeds; all must have reachable door.
+            Room r = new Room("test", w, h, new Random(seed));
+            boolean found = false;
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    boolean corner = (x == 0 || x == w - 1) && (y == 0 || y == h - 1);
+                    if (r.getTile(x, y) instanceof Door && !corner) {
+                        found = true;
+                    }
+                }
+            }
+            assertThat("seed " + seed, found, is(true));
+        }
+    }
 
     @Test
     void noTileIsNull() {

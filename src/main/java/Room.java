@@ -1,3 +1,4 @@
+
 import java.util.Random;
 
 public class Room {
@@ -15,6 +16,9 @@ public class Room {
         this.height = h;
         this.room = generateRoom(w, h); //blank "room" of correct dimensions
     }
+
+    //possibly refactor to have one char[][] for visible map,
+    //possibly other TerrainTile[][] for special objects
 
     private TerrainTile[][] generateRoom(int w, int h){
         TerrainTile[][] newRoom = new TerrainTile[w][h]; //creates a room of given size
@@ -40,7 +44,7 @@ public class Room {
             y = 1 + r.nextInt(height - 2); //avoid placing doors on corner tiles
             x = r.nextBoolean() ? 0 : width - 1; //leftmost, or rightmost col
         }
-        t[x][y] = new Door(x, y); //swap wall for door
+        //t[x][y] = new Door(x, y); //swap wall for door
     }
 
     public TerrainTile[][] roomMatrix(){
