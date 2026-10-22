@@ -1,7 +1,8 @@
 import org.hamcrest.core.CombinableMatcher;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -9,19 +10,22 @@ import static org.hamcrest.Matchers.*;
 import java.util.Random;
 
 public class RoomTest {
-    Room testRoom = new Room("test", 40, 37, new Random()); //randomised door placement every test run
+    Room testRoom = new Room("test", 40, 37, new Random(777)); //seeded test rooms for stable tests
 
     //possibly exchange for parameterised tests
     @Test
     void illegalRoom() {
-        assertThrows(IllegalArgumentException.class, () -> new Room("Small width", 2, 5, new Random()));
-        assertThrows(IllegalArgumentException.class, () -> new Room("Small height", 4, 2, new Random()));
-        assertThrows(IllegalArgumentException.class, () -> new Room("Both too small", 2, 2, new Random()));
+        assertThrows(IllegalArgumentException.class, () -> new Room("Small width", 2, 5, new Random(12)));
+        assertThrows(IllegalArgumentException.class, () -> new Room("Small height", 4, 2, new Random(2)));
+        assertThrows(IllegalArgumentException.class, () -> new Room("Both too small", 2, 2, new Random(9)));
     }
 
-    @Test
-    @Disabled("todo: test for legal rooms")
-    void legalRoom() {
+    @ParameterizedTest
+    @CsvSource({"3, 3", "4, 4", "3, 10", "10, 3", "40, 37"})
+    void legalRoom(int w, int h) {
+        Room r = new Room("Legal room", w, h, new Random(777));
+        assertThat(r.getWidth(), is(w));
+        assertThat(r.getHeight(), is(h));
     }
 
     @Test
@@ -38,20 +42,20 @@ public class RoomTest {
     void edgesAreWallsOrDoors() {
         int w = testRoom.getWidth();
         int h = testRoom.getHeight();
-        for (int i = 0; i < testRoom.getWidth() - 1; i++) { //top row
+        for (int i = 0; i < w; i++) { //top row
             assertThat(testRoom.getTile(i, 0),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class))));
         }
-        for (int i = 0; i < testRoom.getHeight() - 1; i++) { //first col
+        for (int i = 0; i < h - 1; i++) { //first col
             assertThat(testRoom.getTile(0, i + 1),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class))));
         }
-        for (int i = 0; i < testRoom.getWidth() - 1; i++) { //bottom row
-            assertThat(testRoom.getTile(i, testRoom.getHeight() - 1),
+        for (int i = 0; i < w - 1; i++) { //bottom row
+            assertThat(testRoom.getTile(i, h - 1),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class)))); //last row
         }
-        for (int i = 0; i < testRoom.getHeight() - 1; i++) {//last col
-            assertThat(testRoom.getTile(testRoom.getWidth() - 1, i + 1),
+        for (int i = 0; i < h-1; i++) {//last col
+            assertThat(testRoom.getTile(w - 1, i + 1),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class)))); //last col
         }
     }
@@ -76,8 +80,23 @@ public class RoomTest {
     }
 
     @Test
-    @Disabled("todo: test for reachable doors (non-corner positions)")
-    void atLeastOneDoorOnNonCorner() {}
+    void atLeastOneDoorOnNonCorner() {
+        int w = 5;
+        int h = 8;
+        for (int seed = 0; seed < 500; seed++) {//check rooms for many different seeds; all must have reachable door.
+            Room r = new Room("test", w, h, new Random(seed));
+            boolean found = false;
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    boolean corner = (x == 0 || x == w - 1) && (y == 0 || y == h - 1);
+                    if (r.getTile(x, y) instanceof Door && !corner) {
+                        found = true;
+                    }
+                }
+            }
+            assertThat("seed " + seed, found, is(true));
+        }
+    }
 
     @Test
     void noTileIsNull() {
