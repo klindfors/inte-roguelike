@@ -44,7 +44,7 @@ public class Room {
             y = 1 + r.nextInt(height - 2); //avoid placing doors on corner tiles
             x = r.nextBoolean() ? 0 : width - 1; //leftmost, or rightmost col
         }
-        //t[x][y] = new Door(x, y); //swap wall for door
+        t[x][y] = new Door(x, y); //swap wall for door
     }
 
     public TerrainTile[][] roomMatrix(){
