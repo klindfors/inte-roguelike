@@ -32,21 +32,18 @@ public class Game {
     }
 
     public void tryAdvanceLevel(boolean quizCompleted,
-                                boolean onLadder,
-                                boolean finalLevel) {
+                                boolean onLadder) {
         if (gameState != GameState.RUNNING) {
             return;
         }
 
-        if(player.isDead()){
+        if (player.isDead()) {
             gameState = GameState.LOST;
+            return;
         }
 
-        if (gameState == GameState.RUNNING
-                && quizCompleted
-                && onLadder) {
-
-            if (finalLevel) {
+        if (quizCompleted && onLadder) {
+            if (currentLevelNumber == 3) {
                 gameState = GameState.WON;
             } else {
                 int nextLevelNumber = currentLevelNumber + 1;
