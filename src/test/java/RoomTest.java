@@ -1,6 +1,8 @@
 import org.hamcrest.core.CombinableMatcher;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -18,9 +20,12 @@ public class RoomTest {
         assertThrows(IllegalArgumentException.class, () -> new Room("Both too small", 2, 2, new Random(9)));
     }
 
-    @Test
-    @Disabled("todo: test for legal rooms")
-    void legalRoom() {
+    @ParameterizedTest
+    @CsvSource({"3, 3", "4, 4", "3, 10", "10, 3", "40, 37"})
+    void legalRoom(int w, int h) {
+        Room r = new Room("Legal room", w, h, new Random(777));
+        assertThat(r.getWidth(), is(w));
+        assertThat(r.getHeight(), is(h));
     }
 
     @Test
