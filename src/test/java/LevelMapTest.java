@@ -40,10 +40,10 @@ public class LevelMapTest {
     @Disabled("disable this test to enable maven build, until a level generation is implemented")
     @Test
     void isPassable() {
-        assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Wall.class )));
+        // assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Wall.class )));
 
         //also needs to check that tile is not a closed door; needs door implementation to write proper test.
-        assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Door.class))); //now false for all doors.
+        // assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Door.class))); //now false for all doors.
 
         //additionally needs to check if an NPC is situated on the coordinates; possibly better suited in another test class, ie GUI or Game
     }

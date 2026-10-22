@@ -43,5 +43,19 @@ public class InventoryTest {
         assertEquals(player.numOfItemsInInv(), 5);
         
     }
+
+    @Test 
+    void canDifferentiateBetweenPhysicalAndMentalConsumable(){
+        Player player = new Player(0, 0);
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        Consumable sandwich = new Consumable(ConsumableType.SANDWICH);
+
+        player.pickUp(coffee);
+        player.pickUp(sandwich);
+        player.usePhysicalConsumable();
+
+        assertTrue(player.hasItem(coffee));
+        assertFalse(player.hasItem(sandwich));
+    }
     
 }

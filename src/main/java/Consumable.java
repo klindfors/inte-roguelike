@@ -12,4 +12,14 @@ public class Consumable extends Item {
         player.restoreMentalHealth(mentStrength);
         player.restorePhysicalHealth(physStrength);
     }
+
+    @Override 
+    public boolean givesMentalRestoration(){
+        return mentStrength > 0;
+    }
+    
+    @Override 
+    public boolean givesPhysicalRestoration(){
+        return physStrength > 0;
+    }
 }

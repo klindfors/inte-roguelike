@@ -19,6 +19,24 @@ public class Inventory {
         inventory.remove(index);
     }
 
+    public void useItem(String type, Player player){ // TODO optimize
+        if (type == "Mental"){
+            for (int index = 0; index < inventory.size() ; index++){
+                if (inventory.get(index).givesMentalRestoration()){
+                    inventory.get(index).use(player);
+                    inventory.remove(index);
+                }
+            }
+        } else if (type == "Physical"){
+            for (int index = 0 ; index < inventory.size() ; index++){
+                if (inventory.get(index).givesPhysicalRestoration()){
+                    inventory.get(index).use(player);
+                    inventory.remove(index);
+                }
+            }
+        }
+    }
+
     public boolean containsItem(Item item){
         return inventory.contains(item);
     } 
