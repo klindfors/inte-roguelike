@@ -1,4 +1,5 @@
 public class Player extends GameCharacter{
+    private Inventory inventory = new Inventory();
 
 
     public Player(int x, int y){
@@ -11,6 +12,14 @@ public class Player extends GameCharacter{
 
     public boolean isDead(){
         return getPhysicalHealth() == 0;
+    }
+
+    public void pickUp(Item item){
+        inventory.add(item);
+    }
+
+    public void  useMentalConsumable(){
+        inventory.useItem(0, this);
     }
 
     @Override
