@@ -19,15 +19,19 @@ public class Player extends GameCharacter{
     }
 
     public void  useMentalConsumable(){
-        inventory.useItem(0, this); // Fullösning
+        inventory.useItem(0, this); // TODO find mentcon
     }
 
     public void usePhysicalConsumable(){
-        inventory.useItem(0, this); // Fullösning
+        inventory.useItem(0, this); // TODO find physcon 
     }
 
     public int numOfItemsInInv(){
         return inventory.getSize();
+    }
+
+    public boolean hasItem(Item item){
+        return inventory.containsItem(item);
     }
     
     @Override

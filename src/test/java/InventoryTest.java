@@ -9,21 +9,25 @@ public class InventoryTest {
     @Test 
     void usingMentalConsumableWorks(){
         Player player = new Player(0, 0);
-        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        player.pickUp(coffee);
         player.takeMentalDamage(4);
         player.useMentalConsumable();
 
         assertEquals(player.getMentalHealth(), 4);
+        assertFalse(player.hasItem(coffee));
     }
 
     @Test 
     void usingPhysicalConsumableWorks(){
         Player player = new Player(0, 0);
-        player.pickUp(new Consumable(ConsumableType.SANDWICH));
+        Consumable sandwich = new Consumable(ConsumableType.SANDWICH);
+        player.pickUp(sandwich);
         player.takePhysicalDamage(4);
         player.usePhysicalConsumable();
 
         assertEquals(player.getPhysicalHealth(), 4);
+        assertFalse(player.hasItem(sandwich));
     }
 
     @Test 

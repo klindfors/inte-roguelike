@@ -16,7 +16,12 @@ public class Inventory {
 
     public void useItem(int index, Player player){
         inventory.get(index).use(player);
+        inventory.remove(index);
     }
+
+    public boolean containsItem(Item item){
+        return inventory.contains(item);
+    } 
 
     public int getSize(){
         return inventory.size();
