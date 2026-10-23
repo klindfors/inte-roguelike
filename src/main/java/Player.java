@@ -18,12 +18,12 @@ public class Player extends GameCharacter{
         inventory.add(item);
     }
 
-    public void  useMentalConsumable(){
-        inventory.useItem(0, this); // TODO find mentcon
+    public boolean useMentalConsumable(){
+        return inventory.useItem("Mental", this); // TODO find mentcon
     }
 
-    public void usePhysicalConsumable(){
-        inventory.useItem(0, this); // TODO find physcon 
+    public boolean usePhysicalConsumable(){
+        return inventory.useItem("Physical", this); // TODO find physcon 
     }
 
     public int numOfItemsInInv(){
