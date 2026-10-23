@@ -28,11 +28,10 @@ public class LevelMap {
         //try to place the rooms w helper method
         //todo: room connection, add rooms to level
         //fill the rest of lvl with walls
-        int rCount = 0;
-        for(int r = 0; r < 80; r ++){
+        for(int r = 0; r < width; r ++){
 
-            for(int i= 0; i < 23; i++){
-                if (getTile(r,i).equals(null)){
+            for(int i= 0; i < height; i++){
+                if (level[r][i] == null){
                     level[r][i] = new Wall(r,i);
                 }
             }
