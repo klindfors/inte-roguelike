@@ -15,11 +15,10 @@ public class LevelMapTest {
     void allRoomsConnected() {
 
         //must access door positions of levelmap
-        //from the inside of each door, one shall be able to traverse to the inside of all other doors.
-        //bfs algorithm implementation, must test all
+        //from each door, one shall be able to traverse to all other doors.
+        //implementation might be bfs algorithm implementation, from all door positions, to all other doors.
     }
-    //spion: mocka ett interface och kolla att alla metoder blir anropade.
-    //
+        //spion: mocka ett interface och kolla att alla metoder blir anropade?
 
 
     @Test
