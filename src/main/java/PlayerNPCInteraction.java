@@ -7,9 +7,6 @@ public class PlayerNPCInteraction {
         if (player.isMentalBreakdown()) {
             return;
         }
-        if (npc.hasAnsweredQuestion()) {
-            return;
-        }
         boolean isCorrect = npc.answerQuestion(answer);
         if (!isCorrect) {
             player.takeMentalDamage(1);
