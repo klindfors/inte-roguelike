@@ -8,7 +8,7 @@ public class LevelMapTest {
     //todo: corridor logic tests
     //todo: there must be a staircase in at least one room of the level.
     //if there is a locked door, there must exist a key somewhere on the map.
-    LevelMap testLvl1 = new LevelMap(1, 3, 50, 40);
+    LevelMap testLvl1 = new LevelMap(1, 3);
 
     @Test
     @Disabled("todo: all rooms connected to main map")
