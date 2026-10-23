@@ -1,3 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class LevelMap {
@@ -8,17 +11,19 @@ public class LevelMap {
     private TerrainTile[][] level;
     private int levelNr;
     private Room[] rooms;
+    private final Random rand;
 
     //todo: constructor with nr of rooms on map, map dimensions, map lvl (difficulty/ game progression lvl)
-    LevelMap(int levelNr, int nrOfRooms){
+    LevelMap(int levelNr, int nrOfRooms, long seed){
         this.width = 80; //standard w
         this.height = 22; //standard map h
         this.levelNr = levelNr;
         this.rooms = new Room[nrOfRooms];
-        this.level = new TerrainTile[22][80];
+        this.level = new TerrainTile[width][height];
+        this.rand = new Random(seed);
 
         for(int i=0; i < nrOfRooms; i++) {// generating the rooms, adding them to lvl
-            rooms[i] = new Room("Room "+ i, 5, 6, new Random()); //get room names from list of possible room names. random from seeds or without.
+            rooms[i] = new Room("Room " + i, 5, 6, new Random(seed+i)); //get room names from list of possible room names. random from seeds or without.
         }
         //try to place the rooms w helper method
         //todo: room connection, add rooms to level
@@ -44,7 +49,6 @@ public class LevelMap {
 
     public TerrainTile getTile(int x, int y){
         TerrainTile returnTile = new TerrainTile(level[x][y].getName(), level[x][y].isPassable(),level[x][y].getSymbol(), level[x][y].getX(), level[x][y].getY()) {
-            @Override
             public int getX() {
                 return super.getX();
             }
@@ -52,10 +56,15 @@ public class LevelMap {
         return returnTile; //returns copy of tile
     }
 
-    //constant dimensions of lvlmap, or varying dimensions. decision needed.
+
+
+
     //list of room names/room types if relevant.
     //connecting the rooms with corridor algorithm.
     //todo: write some method stubs for connecting the rooms
     //possibly adjust room orientation when constructing the map. matrix rotations.
     //possibly add npcs to rooms
+
+
+
 }
