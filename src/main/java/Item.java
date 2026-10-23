@@ -10,4 +10,8 @@ public abstract class Item {
     public boolean givesPhysicalRestoration(){
         return false;
     }
+
+    public boolean isKey(){
+        return false;
+    }
 }
