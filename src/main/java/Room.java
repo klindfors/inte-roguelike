@@ -52,6 +52,14 @@ public class Room {
         //swap wall for door
     }
 
+    public int getDoorX(){
+        return doorX;
+    }
+
+    public int getDoorY(){
+        return doorY;
+    }
+
     public TerrainTile[][] roomMatrix(){
         return room;
     }
