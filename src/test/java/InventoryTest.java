@@ -57,5 +57,27 @@ public class InventoryTest {
         assertTrue(player.hasItem(coffee));
         assertFalse(player.hasItem(sandwich));
     }
+
+    @Test 
+    void canAddDifferntTypesOfItem(){
+        Player player = new Player(0, 0);
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        Key key = new Key();
+
+        player.pickUp(coffee);
+        player.pickUp(key);
+
+        assertEquals(player.numOfItemsInInv(), 2);
+    }
+
+    @Test 
+    void returnsTrueWhenConsumedItem(){
+        Player player = new Player(0, 0);
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+
+        player.pickUp(coffee);
+        player.takeMentalDamage(4);
+        assertTrue(player.useMentalConsumable());
+    }
     
 }
