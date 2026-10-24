@@ -26,23 +26,32 @@ public class Game {
 
 
     public void updateState() {
-        if (gameState == GameState.RUNNING && player.isDead()) {
-            gameState = GameState.LOST;
-        }
-    }
-
-    public void tryAdvanceLevel(boolean quizCompleted,
-                                boolean onLadder) {
-        if (gameState != GameState.RUNNING) {
+        if (gameState != GameState.RUNNING
+                && gameState != GameState.FROZEN) {
             return;
         }
 
         if (player.isDead()) {
             gameState = GameState.LOST;
+        } else if (player.isMentalBreakdown()) {
+            if (player.hasMentalRecoveryItem()) {
+                gameState = GameState.FROZEN;
+            } else {
+                gameState = GameState.LOST;
+            }
+        } else {
+            gameState = GameState.RUNNING;
+        }
+    }
+
+    public void tryAdvanceLevel(NPC npc, boolean onLadder) {
+        updateState();
+
+        if (gameState != GameState.RUNNING) {
             return;
         }
 
-        if (quizCompleted && onLadder) {
+        if (npc.isQuizCompleted() && onLadder) {
             if (currentLevelNumber == 3) {
                 gameState = GameState.WON;
             } else {

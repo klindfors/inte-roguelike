@@ -33,6 +33,10 @@ public class Player extends GameCharacter{
     public boolean hasItem(Item item){
         return inventory.containsItem(item);
     }
+
+    public boolean hasMentalRecoveryItem() {
+        return inventory.hasMentalRecoveryItem();
+    }
     
     @Override
     public void restorePhysicalHealth(int amount) {
