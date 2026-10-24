@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class NPC extends GameCharacter{
 
     private String dialogue;
-    private Quiz quiz;
-    private boolean hasAnswered = false;
+    private List<Quiz> questions;
 
     public NPC (int x, int y, String dialogue){
         super(x,y);
@@ -12,35 +14,47 @@ public class NPC extends GameCharacter{
     public NPC(int x, int y, String dialogue, Quiz quiz){
         super(x, y);
         this.dialogue = dialogue;
-        this.quiz = quiz;
+        this.questions = new ArrayList<>();
+        this.questions.add(quiz);
+    }
+
+    public NPC(int x, int y, String dialogue, List<Quiz> questions){
+        super(x, y);
+        this.dialogue = dialogue;
+        this.questions = questions;
     }
 
     public String getDialogue(){
         return dialogue;
     }
 
-    public Quiz getQuiz(){
-        return quiz;
+    public Quiz getQuiz() {
+        if (questions == null || questions.isEmpty()) {
+            return null;
+        }
+        return questions.get(0);
     }
 
-    // Kontrollerar om spelaren redan har svarat på NPC:ns fråga.
-    // Används för att undvika att spelaren får mental skada flera gånger för samma fråga.
     public boolean hasAnsweredQuestion() {
-        return hasAnswered;
+        return questions != null && questions.isEmpty();
     }
 
     public boolean answerQuestion(int answer){
-        if (hasAnswered){
+        if (questions.isEmpty()){
             return false;
         }
-        hasAnswered = true;
-        boolean correct = quiz.answer(answer);
-
+        boolean correct = questions.get(0).answer(answer);
         if(correct){
             dialogue = "Rätt svar! Du får gå vidare";
+            questions.remove(0);
         }else{
             dialogue = "Fel svar! Du har förlorat ditt försök.";
         }
         return correct;
     }
+
+    public boolean isQuizCompleted(){
+        return questions != null && questions.isEmpty();
+    }
+
 }
