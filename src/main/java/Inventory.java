@@ -27,7 +27,7 @@ public class Inventory {
                     return true;
                 }
             }
-        } else if (type == "Physical") {
+        } else if ("Physical".equalsIgnoreCase(type)) {
             for (int index = 0; index < inventory.size(); index++) {
                 if (inventory.get(index).givesPhysicalRestoration()) {
                     inventory.get(index).use(player);
