@@ -19,7 +19,7 @@ public class Inventory {
     }
 
     public boolean useItem(String type, Player player) { // TODO optimize
-        if (type == "Mental") {
+        if ("Mental".equalsIgnoreCase(type)) {
             for (int index = 0; index < inventory.size(); index++) {
                 if (inventory.get(index).givesMentalRestoration()) {
                     inventory.get(index).use(player);
