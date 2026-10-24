@@ -5,32 +5,31 @@ public class Inventory {
 
     // public Inventory(){};
 
-    public void add(Item item){
-        if (inventory.size() < 5){
+    public void add(Item item) {
+        if (inventory.size() < 5) {
             inventory.add(item);
-        }
-        else{
+        } else {
             return;
         }
     }
 
-    public void useItem(int index, Player player){
+    public void useItem(int index, Player player) {
         inventory.get(index).use(player);
         inventory.remove(index);
     }
 
-    public boolean useItem(String type, Player player){ // TODO optimize
-        if (type == "Mental"){
-            for (int index = 0; index < inventory.size() ; index++){
-                if (inventory.get(index).givesMentalRestoration()){
+    public boolean useItem(String type, Player player) { // TODO optimize
+        if (type == "Mental") {
+            for (int index = 0; index < inventory.size(); index++) {
+                if (inventory.get(index).givesMentalRestoration()) {
                     inventory.get(index).use(player);
                     inventory.remove(index);
                     return true;
                 }
             }
-        } else if (type == "Physical"){
-            for (int index = 0 ; index < inventory.size() ; index++){
-                if (inventory.get(index).givesPhysicalRestoration()){
+        } else if (type == "Physical") {
+            for (int index = 0; index < inventory.size(); index++) {
+                if (inventory.get(index).givesPhysicalRestoration()) {
                     inventory.get(index).use(player);
                     inventory.remove(index);
                     return true;
@@ -40,11 +39,20 @@ public class Inventory {
         return false;
     }
 
-    public boolean containsItem(Item item){
+    public boolean containsItem(Item item) {
         return inventory.contains(item);
-    } 
+    }
 
-    public int getSize(){
+    public boolean hasMentalRecoveryItem() {
+        for (Item item : inventory) {
+            if (item.givesMentalRestoration()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getSize() {
         return inventory.size();
     }
 }

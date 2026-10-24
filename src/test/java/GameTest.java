@@ -266,16 +266,116 @@ public class GameTest {
     }
 
     @Test
-    void mentalBreakdownShouldNotEndRunningGame() {
+    void mentalBreakdownWithRecoveryItemShouldFreezeGame() {
         Player player = mock(Player.class);
         when(player.isDead()).thenReturn(false);
         when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(true);
 
         Game game = new Game(player, mock(LevelMapFactory.class));
         game.start();
 
         game.updateState();
 
+        assertEquals(GameState.FROZEN, game.getState());
+        verify(player, never()).useMentalConsumable();
+    }
+
+    @Test
+    void mentalBreakdownWithoutRecoveryItemShouldLoseGame() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(false);
+
+        Game game = new Game(player, mock(LevelMapFactory.class));
+        game.start();
+
+        game.updateState();
+
+        assertEquals(GameState.LOST, game.getState());
+    }
+
+    @Test
+    void recoveredPlayerShouldUnfreezeGame() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(true);
+
+        Game game = new Game(player, mock(LevelMapFactory.class));
+        game.start();
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        // Simulate restored mental health after consuming an item.
+        when(player.isMentalBreakdown()).thenReturn(false);
+        game.updateState();
+
         assertEquals(GameState.RUNNING, game.getState());
+    }
+
+    @Test
+    void playerDyingWhileFrozenShouldLoseGame() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(true);
+
+        Game game = new Game(player, mock(LevelMapFactory.class));
+        game.start();
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        when(player.isDead()).thenReturn(true);
+        game.updateState();
+
+        assertEquals(GameState.LOST, game.getState());
+    }
+
+    @Test
+    void waitingWithoutConsumingItemShouldKeepGameFrozen() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(true);
+
+        Game game = new Game(player, mock(LevelMapFactory.class));
+        game.start();
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+        verify(player, never()).useMentalConsumable();
+    }
+
+    @Test
+    void frozenPlayerShouldNotAdvanceLevel() {
+        Player player = mock(Player.class);
+        when(player.isDead()).thenReturn(false);
+        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(true);
+
+        LevelMapFactory factory = mock(LevelMapFactory.class);
+        LevelMap firstLevel = mock(LevelMap.class);
+        when(factory.create(1)).thenReturn(firstLevel);
+
+        Game game = new Game(player, factory);
+        game.start();
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        game.tryAdvanceLevel(true, true);
+
+        assertEquals(GameState.FROZEN, game.getState());
+        assertSame(firstLevel, game.getCurrentLevel());
+        verify(factory).create(1);
+        verifyNoMoreInteractions(factory);
     }
 }

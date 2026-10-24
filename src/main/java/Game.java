@@ -26,8 +26,21 @@ public class Game {
 
 
     public void updateState() {
-        if (gameState == GameState.RUNNING && player.isDead()) {
+        if (gameState != GameState.RUNNING
+                && gameState != GameState.FROZEN) {
+            return;
+        }
+
+        if (player.isDead()) {
             gameState = GameState.LOST;
+        } else if (player.isMentalBreakdown()) {
+            if (player.hasMentalRecoveryItem()) {
+                gameState = GameState.FROZEN;
+            } else {
+                gameState = GameState.LOST;
+            }
+        } else {
+            gameState = GameState.RUNNING;
         }
     }
 
