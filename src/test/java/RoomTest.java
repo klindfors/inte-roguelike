@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.*;
 import java.util.Random;
 
 public class RoomTest {
-    Room testRoom = new Room("test", 40, 37, new Random(777)); //seeded test rooms for stable tests
+    Room testRoom = new Room("test", 40, 37, new Random(77)); //seeded test rooms for stable tests
 
     //possibly exchange for parameterised tests
     @Test
@@ -38,24 +38,26 @@ public class RoomTest {
         assertThat(testRoom.getWidth(), is(40));
     }
 
-    @Test
-    void edgesAreWallsOrDoors() {
-        int w = testRoom.getWidth();
-        int h = testRoom.getHeight();
+    @ParameterizedTest
+    @CsvSource({"777", "555", "6", "900", "68","5", "9879", "234232", "99373773", "9999", "2000", "666"})
+    void edgesAreWallsOrDoors(int seed) {
+        Room testRoom777 = new Room("test", 4,8, new Random(seed));
+        int w = testRoom777.getWidth();
+        int h = testRoom777.getHeight();
         for (int i = 0; i < w; i++) { //top row
-            assertThat(testRoom.getTile(i, 0),
+            assertThat(testRoom777.getTile(i, 0),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class))));
         }
         for (int i = 0; i < h - 1; i++) { //first col
-            assertThat(testRoom.getTile(0, i + 1),
+            assertThat(testRoom777.getTile(0, i + 1),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class))));
         }
         for (int i = 0; i < w - 1; i++) { //bottom row
-            assertThat(testRoom.getTile(i, h - 1),
+            assertThat(testRoom777.getTile(i, h - 1),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class)))); //last row
         }
         for (int i = 0; i < h-1; i++) {//last col
-            assertThat(testRoom.getTile(w - 1, i + 1),
+            assertThat(testRoom777.getTile(w - 1, i + 1),
                     is(CombinableMatcher.either(instanceOf(Wall.class)).or(instanceOf(Door.class)))); //last col
         }
     }
@@ -95,6 +97,14 @@ public class RoomTest {
                 }
             }
             assertThat("seed " + seed, found, is(true));
+        }
+    }
+
+    @Test
+    void doorPosMatch() {
+        for (int seed = 0; seed < 50; seed++) {
+            Room r = new Room("test", 5, 8, new Random(seed));
+            assertThat("seed " + seed, r.getTile(r.getDoorX(), r.getDoorY()), is(instanceOf(Door.class)));
         }
     }
 

@@ -8,15 +8,18 @@ public class LevelMapTest {
     //todo: corridor logic tests
     //todo: there must be a staircase in at least one room of the level.
     //if there is a locked door, there must exist a key somewhere on the map.
-    LevelMap testLvl1 = new LevelMap(1, 3, 50, 40);
+    LevelMap testLvl1 = new LevelMap(1, 3, 67);
 
     @Test
     @Disabled("todo: all rooms connected to main map")
     void allRoomsConnected() {
 
-        //from the inside of each door, one shall be able to traverse to the inside of all other doors.
-        //look for a suitable algorithm for the purpose.
+        //must access door positions of levelmap
+        //from each door, one shall be able to traverse to all other doors.
+        //implementation might be bfs algorithm implementation, from all door positions, to all other doors.
     }
+        //spion: mocka ett interface och kolla att alla metoder blir anropade?
+
 
     @Test
     @Disabled("todo: at least two rooms in level map")
