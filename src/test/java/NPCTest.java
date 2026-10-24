@@ -1,8 +1,27 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NPCTest {
+
+    private Quiz quiz;
+    private NPC npc;
+
+    @BeforeEach
+    void setUp() {
+        quiz = new Quiz(
+                "I TDD vad börjar man först med?",
+                new String[]{"testning", "kodning", "dokumentation"},
+                0,
+                Difficulty.EASY
+        );
+
+        npc = new NPC(0, 0, "Hej!", quiz);
+    }
 
     @Test
     void npcShouldHaveDialogue(){
@@ -12,62 +31,76 @@ public class NPCTest {
 
     @Test
     void npcShouldHaveQuiz(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"},0,Difficulty.EASY);
-        NPC npc = new NPC(0,0,"Hej!", quiz);
         assertSame(quiz, npc.getQuiz());
     }
 
     @Test
     void npcShouldAcceptCorrectAnswer(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"}, 0,Difficulty.EASY);
-        NPC npc = new NPC(0,0,"Hej!", quiz);
         assertTrue(npc.answerQuestion(0));
     }
 
     @Test
-    void npcShouldOnlyAllowOneAnswerAttempt(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"},0,Difficulty.EASY
-        );
-        NPC npc = new NPC(0,0,"Hej!", quiz);
+    void npcShouldAllowRetryAfterWrongAnswer(){
         npc.answerQuestion(1);
-        assertFalse(npc.answerQuestion(0));
+        assertTrue(npc.answerQuestion(0));
     }
 
     @Test
     void npcShouldShowDialogueAfterCorrectAnswer() {
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"}, 0,
-                Difficulty.EASY);
-
-        NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig", quiz);
         npc.answerQuestion(0);
         assertEquals("Rätt svar! Du får gå vidare", npc.getDialogue());
     }
 
     @Test
     void npcShouldShowDialougeAfterWrongAnswer(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"},
-                0,Difficulty.EASY);
-        NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig.", quiz);
         npc.answerQuestion(1);
         assertEquals("Fel svar! Du har förlorat ditt försök.", npc.getDialogue());
     }
 
-    //kanske inte behövs??
+
     @Test
-    void npcShouldKeepDialogueAfterSecondAttempt(){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String[]{"testning", "kodning", "dokumentation"},
-                0,Difficulty.EASY);
-        NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig.", quiz);
+    void npcShouldUpdateDialogueAfterCorrectRetry(){
         npc.answerQuestion(1);
         boolean secondAttempt = npc.answerQuestion(0);
 
-        assertFalse(secondAttempt);
-        assertEquals("Fel svar! Du har förlorat ditt försök.", npc.getDialogue());
+        assertTrue(secondAttempt);
+        assertEquals("Rätt svar! Du får gå vidare", npc.getDialogue());
+    }
+
+    @Test
+    void npcShouldNotBeQuizCompletedWhenQuestionsRemain() {
+        assertFalse(npc.isQuizCompleted());
+    }
+
+    @Test
+    void npcShouldBeQuizCompletedAfterCorrectAnswer() {
+        assertTrue(npc.answerQuestion(0));
+        assertTrue(npc.isQuizCompleted());
+    }
+
+    @Test
+    void npcShouldNotCompleteQuizAfterFirstOfTwoCorrectAnswers() {
+        Quiz secondQuiz = new Quiz(
+                "Vad betyder TDD?",
+                new String[]{"testdriven utveckling", "kodning", "dokumentation"},
+                0,
+                Difficulty.EASY
+        );
+
+        List<Quiz> questions = new ArrayList<>();
+        questions.add(quiz);
+        questions.add(secondQuiz);
+        NPC npcWithQuestions = new NPC(0, 0, "Hej!", questions);
+
+        npcWithQuestions.answerQuestion(0);
+        assertFalse(npcWithQuestions.isQuizCompleted());
+        assertTrue(npcWithQuestions.answerQuestion(0));
+        assertTrue(npcWithQuestions.isQuizCompleted());
+    }
+
+    @Test
+    void npcWithoutQuestionsShouldNotBeQuizCompleted() {
+        NPC npcWithoutQuiz = new NPC(0, 0, "Hej!");
+        assertFalse(npcWithoutQuiz.isQuizCompleted());
     }
 }

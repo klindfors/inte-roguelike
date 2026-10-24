@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerNPCIntegrationTest {
@@ -26,12 +29,14 @@ public class PlayerNPCIntegrationTest {
     }
 
     @Test
-    void repeatedAnswerDoesNotReduceMentalHealthAgain() {
+    void repeatedWrongAnswerReducesMentalHealthAgain() {
         interaction.answerQuestion(player, npc, 1);
         int healthAfterFirstAnswer = player.getMentalHealth();
-        interaction.answerQuestion(player, npc, 1);
 
-        assertEquals(healthAfterFirstAnswer, player.getMentalHealth());
+        interaction.answerQuestion(player, npc, 1);
+        int healthAfterSecondAnswer = player.getMentalHealth();
+
+        assertEquals(healthAfterFirstAnswer - 1,healthAfterSecondAnswer );
     }
 
     @Test
@@ -73,9 +78,9 @@ public class PlayerNPCIntegrationTest {
         assertFalse(npc.hasAnsweredQuestion());
 
         player.restoreMentalHealth(2);
-        interaction.answerQuestion(player, npc, 1);
+        interaction.answerQuestion(player, npc, 0);
         assertTrue(npc.hasAnsweredQuestion());
-        assertEquals(1, player.getMentalHealth());
+        assertEquals(2, player.getMentalHealth());
     }
 
     @Test
@@ -94,6 +99,36 @@ public class PlayerNPCIntegrationTest {
         assertDoesNotThrow(
                 () -> interaction.answerQuestion(player, npcWithoutQuiz, 1));
         assertFalse(npcWithoutQuiz.hasAnsweredQuestion());
+        assertEquals(5, player.getMentalHealth());
+    }
+
+    @Test
+    void playerCanAnswerAllNpcQuestions() {
+        Quiz secondQuiz = new Quiz(
+                "Vad betyder TDD?",
+                new String[]{
+                        "Testdriven utveckling",
+                        "Kodning",
+                        "Dokumentation"
+                },
+                0,
+                Difficulty.EASY
+        );
+
+        List<Quiz> questions = new ArrayList<>();
+        questions.add(npc.getQuiz());
+        questions.add(secondQuiz);
+
+        NPC npcWithQuestions = new NPC(
+                1, 2, "Svara på frågorna!", questions
+        );
+
+        interaction.answerQuestion(player, npcWithQuestions, 0);
+        assertFalse(npcWithQuestions.isQuizCompleted());
+
+        interaction.answerQuestion(player, npcWithQuestions, 0);
+        assertTrue(npcWithQuestions.isQuizCompleted());
+
         assertEquals(5, player.getMentalHealth());
     }
 }
