@@ -23,7 +23,7 @@ public class LevelMap {
         this.rand = new Random(seed);
 
         for(int i=0; i < nrOfRooms; i++) {// generating the rooms, adding them to lvl
-            rooms[i] = new Room("Room " + i, 5, 6, new Random(seed+i)); //get room names from list of possible room names. random from seeds or without.
+            rooms[i] = new Room("Room " + i, 5, 6, rand); //get room names from list of possible room names. random from seeds or without.
         }
         //try to place the rooms w helper method
         //todo: room connection, add rooms to level
