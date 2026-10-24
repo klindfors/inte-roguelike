@@ -1,0 +1,19 @@
+question,answers,correctAnswer,difficulty
+"Vad börjar man med i TDD?","Kodning;Testning;Dokumentation",1,EASY
+"Vad används en klass till i Java?","Att beskriva objekt och deras beteende;Att starta datorn;Att lagra enbart bilder",0,EASY
+"Vilket värde har en boolean?","Ett heltal;true eller false;En textsträng",1,EASY
+"Vilket nyckelord skapar ett nytt objekt?","class;return;new",2,EASY
+"Vad används en metod till?","Att samla kod för en viss uppgift;Att skapa en projektmapp;Att ändra Java-versionen",0,EASY
+"Vilken indexposition har det första elementet i en Java-array?","0;1;-1",0,EASY
+"Vad är ett enhetstest?","Ett test av hela systemet;Ett test av en isolerad del av systemet;Ett test av användargränssnittets design",1,MEDIUM
+"Vad betyder assertEquals i JUnit?","Att jämföra förväntat och faktiskt värde;Att skapa ett objekt;Att avsluta programmet",0,MEDIUM
+"Vad gör @BeforeEach i JUnit 5?","Kör metoden före varje test;Kör metoden efter alla tester;Kör metoden endast när ett test misslyckas",0,MEDIUM
+"Vad innebär inkapsling i objektorienterad programmering?","Att samla data och beteende och kontrollera åtkomst;Att kopiera hela projektet;Att köra alla tester samtidigt",0,MEDIUM
+"Vad gör en konstruktor?","Skapar och initierar ett objekt;Jämför två strängar;Kör automatiskt alla tester",0,MEDIUM
+"Varför använder man en List i Java?","För att lagra en samling element;För att definiera en klass;För att skriva ut felmeddelanden",0,MEDIUM
+"Vad innebär Red i TDD?","Att ett nytt test misslyckas innan implementationen finns;Att alla tester har passerat;Att programmet ska tas bort",0,HARD
+"Varför använder man mockar i ett enhetstest?","För att ersätta beroenden med kontrollerade objekt;För att automatiskt skapa riktiga användare;För att slippa skriva assertions",0,HARD
+"Vad innebär regressionstestning?","Att kontrollera att tidigare funktionalitet fortfarande fungerar;Att endast testa ny kod manuellt;Att ta bort gamla tester",0,HARD
+"Varför returnerar getAnswers en kopia av svarsalternativen?","För att förhindra att anroparen ändrar Quiz-objektets interna array;För att sortera svaren automatiskt;För att ändra frågans svårighetsgrad",0,HARD
+"Vad innebär single responsibility principle?","En klass bör ha ett tydligt huvudansvar;En klass måste ha exakt en metod;Alla klasser måste ärva från samma klass",0,HARD
+"Vad är syftet med dependency injection?","Att tillföra beroenden utifrån i stället för att skapa dem direkt inuti klassen;Att göra alla variabler publika;Att ersätta alla tester med manuella kontroller",0,HARD
