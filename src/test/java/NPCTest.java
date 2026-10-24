@@ -103,4 +103,22 @@ public class NPCTest {
         NPC npcWithoutQuiz = new NPC(0, 0, "Hej!");
         assertFalse(npcWithoutQuiz.isQuizCompleted());
     }
+
+    @Test
+    void npcWithoutQuizShouldHandleAnswerSafely(){
+        NPC npcWithoutQuiz = new NPC(0,0, "Hej");
+        assertFalse(npcWithoutQuiz.answerQuestion(0));
+    }
+
+    @Test
+    void wrongAnswerShouldKeepAnswerInArray(){
+        npc.answerQuestion(1);
+        assertSame(quiz, npc.getQuiz());
+    }
+
+    @Test
+    void correctAnswerShouldRemoveAnswerFromArray(){
+        npc.answerQuestion(0);
+        assertNull(npc.getQuiz());
+    }
 }
