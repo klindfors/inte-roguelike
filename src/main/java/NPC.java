@@ -4,7 +4,8 @@ import java.util.List;
 public class NPC extends GameCharacter{
 
     private String dialogue;
-    private List<Quiz> questions;
+    private List<Quiz> questions = new ArrayList<>();
+    private boolean hadQuestions = false;
 
     public NPC (int x, int y, String dialogue){
         super(x,y);
@@ -12,16 +13,21 @@ public class NPC extends GameCharacter{
     }
 
     public NPC(int x, int y, String dialogue, Quiz quiz){
-        super(x, y);
+        super(x,y);
         this.dialogue = dialogue;
-        this.questions = new ArrayList<>();
-        this.questions.add(quiz);
+        if (quiz != null){
+            this.questions.add(quiz);
+        }
+        hadQuestions = true;
     }
 
-    public NPC(int x, int y, String dialogue, List<Quiz> questions){
+    public NPC(int x, int y, String dialogue, List<Quiz> questions ){
         super(x, y);
         this.dialogue = dialogue;
-        this.questions = questions;
+        if (questions != null) {
+            this.questions = new ArrayList<>(questions);
+        }
+        hadQuestions = true;
     }
 
     public String getDialogue(){
@@ -36,7 +42,7 @@ public class NPC extends GameCharacter{
     }
 
     public boolean hasAnsweredQuestion() {
-        return questions != null && questions.isEmpty();
+        return hadQuestions && questions.isEmpty();
     }
 
     public boolean answerQuestion(int answer){
@@ -54,7 +60,7 @@ public class NPC extends GameCharacter{
     }
 
     public boolean isQuizCompleted(){
-        return questions != null && questions.isEmpty();
+        return hadQuestions && questions.isEmpty();
     }
 
 }
