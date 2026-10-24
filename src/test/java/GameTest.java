@@ -299,4 +299,50 @@ public class GameTest {
 
         assertEquals(GameState.FROZEN, game.getState());
     }
+
+    @Test
+    void startingRunningGameShouldNotGenerateAnotherMap() {
+        game.start();
+
+        game.start();
+
+        assertEquals(GameState.RUNNING, game.getState());
+        assertSame(firstLevel, game.getCurrentLevel());
+        verify(factory, times(1)).create(1);
+        verifyNoMoreInteractions(factory);
+    }
+
+    @Test
+    void startingLostGameShouldNotRestartIt() {
+        game.start();
+        when(player.isDead()).thenReturn(true);
+        game.updateState();
+
+        assertEquals(GameState.LOST, game.getState());
+
+        game.start();
+
+        assertEquals(GameState.LOST, game.getState());
+        assertSame(firstLevel, game.getCurrentLevel());
+        verify(factory).create(1);
+        verifyNoMoreInteractions(factory);
+    }
+
+    @Test
+    void startingWonGameShouldNotRestartIt() {
+        startAndReachFinalLevel();
+        when(thirdNpc.isQuizCompleted()).thenReturn(true);
+        game.tryAdvanceLevel(thirdNpc, true);
+
+        assertEquals(GameState.WON, game.getState());
+
+        game.start();
+
+        assertEquals(GameState.WON, game.getState());
+        assertSame(thirdLevel, game.getCurrentLevel());
+        verify(factory).create(1);
+        verify(factory).create(2);
+        verify(factory).create(3);
+        verifyNoMoreInteractions(factory);
+    }
 }
