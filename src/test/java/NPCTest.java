@@ -121,4 +121,29 @@ public class NPCTest {
         npc.answerQuestion(0);
         assertNull(npc.getQuiz());
     }
+
+    @Test
+    void npcShouldUseEasyQuestionsLoadedFromFile(){
+        List<Quiz> easyQuestions = QuizBank.getQuizzesForLevel(1);
+        NPC npc = new NPC(
+                0,0,"Hej. Svara på mina frågor.",
+                easyQuestions
+        );
+        assertNotNull(npc.getQuiz());
+        assertEquals(Difficulty.EASY,
+                npc.getQuiz().getDifficulty());
+    }
+
+    @Test //första svaret i filen har index 1
+    void npcShouldMoveOnToNextQuestion(){
+        List<Quiz> easyQuiz = QuizBank.getQuizzesForLevel(1);
+        NPC npc = new NPC(0,0,
+                "Hej.Svara på mina frågor",
+                easyQuiz);
+
+        Quiz firstQuestion = npc.getQuiz();
+        assertNotNull(firstQuestion);
+        assertTrue(npc.answerQuestion(1));
+        assertNotSame(firstQuestion,npc.getQuiz());
+    }
 }

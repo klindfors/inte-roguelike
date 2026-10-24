@@ -124,11 +124,28 @@ public class QuizBankTest {
     }
 
     @Test
-    void getQuizessForLevelFromFileShouldReturnOnlyEasyQuestions(){
+    void getQuizessForLevelOneFromFileShouldReturnOnlyEasyQuestions(){
         List<Quiz> levelQuizzes = QuizBank.getQuizzesForLevel(1);
         assertFalse(levelQuizzes.isEmpty());
         assertTrue(levelQuizzes.stream()
                 .allMatch(q->q.getDifficulty() == Difficulty.EASY)
+        );
+    }
+
+    @Test
+    void getQuizessForLevelTwoFromFileShouldReturnOnlyMediumQuestions(){
+        List<Quiz> levelQuizzes = QuizBank.getQuizzesForLevel(2);
+        assertFalse(levelQuizzes.isEmpty());
+        assertTrue(levelQuizzes.stream()
+                .allMatch(q->q.getDifficulty() == Difficulty.MEDIUM)
+        );
+    }
+    @Test
+    void getQuizessForLevelThreeFromFileShouldReturnOnlyHardQuestions(){
+        List<Quiz> levelQuizzes = QuizBank.getQuizzesForLevel(3);
+        assertFalse(levelQuizzes.isEmpty());
+        assertTrue(levelQuizzes.stream()
+                .allMatch(q->q.getDifficulty() == Difficulty.HARD)
         );
     }
 
