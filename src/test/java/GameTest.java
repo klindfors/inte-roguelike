@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -5,41 +6,61 @@ import static org.mockito.Mockito.*;
 
 public class GameTest {
 
+    private Player player;
+    private LevelMapFactory factory;
+    private Game game;
+
+    private LevelMap firstLevel;
+    private LevelMap secondLevel;
+    private LevelMap thirdLevel;
+
+    private NPC firstNpc;
+    private NPC secondNpc;
+    private NPC thirdNpc;
+
+    @BeforeEach
+    void setUp() {
+        player = mock(Player.class);
+        factory = mock(LevelMapFactory.class);
+
+        firstLevel = mock(LevelMap.class);
+        secondLevel = mock(LevelMap.class);
+        thirdLevel = mock(LevelMap.class);
+
+        when(factory.create(1)).thenReturn(firstLevel);
+        when(factory.create(2)).thenReturn(secondLevel);
+        when(factory.create(3)).thenReturn(thirdLevel);
+
+        firstNpc = mock(NPC.class);
+        secondNpc = mock(NPC.class);
+        thirdNpc = mock(NPC.class);
+
+        game = new Game(player, factory);
+    }
+
+    @Test
+    void newGameShouldNotBeStarted() {
+        assertEquals(GameState.NOT_STARTED, game.getState());
+    }
+
     @Test
     void startingGameChangesStateToRunning() {
-        Player player = mock(Player.class);
-        Game game = new Game(player, mock(LevelMapFactory.class));
-
         game.start();
 
         assertEquals(GameState.RUNNING, game.getState());
     }
 
     @Test
-    void newGameShouldNotBeStarted() {
-        Player player = mock(Player.class);
-        Game game = new Game(player, mock(LevelMapFactory.class));
-
-        assertEquals(GameState.NOT_STARTED, game.getState());
-    }
-
-    @Test
-    void livingPlayerShouldLeaveGameRunning() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
+    void startingGameShouldGenerateFirstLevel() {
         game.start();
 
+        verify(factory).create(1);
+        assertSame(firstLevel, game.getCurrentLevel());
         assertEquals(GameState.RUNNING, game.getState());
     }
 
     @Test
     void playerDyingShouldEndRunningGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
         game.start();
 
         when(player.isDead()).thenReturn(true);
@@ -50,10 +71,7 @@ public class GameTest {
 
     @Test
     void livingPlayerShouldKeepGameRunningAfterUpdate() {
-        Player player = mock(Player.class);
         when(player.isDead()).thenReturn(false);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
         game.start();
 
         game.updateState();
@@ -63,98 +81,64 @@ public class GameTest {
 
     @Test
     void incompleteQuizShouldPreventWinning() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
+        startAndReachFinalLevel();
+        when(thirdNpc.isQuizCompleted()).thenReturn(false);
 
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-
-        // Reach level 3.
-        game.tryAdvanceLevel(true, true);
-        game.tryAdvanceLevel(true, true);
-
-        game.tryAdvanceLevel(false, true);
+        game.tryAdvanceLevel(thirdNpc, true);
 
         assertEquals(GameState.RUNNING, game.getState());
+        assertSame(thirdLevel, game.getCurrentLevel());
     }
 
     @Test
     void completedQuizOnFinalLevelLadderShouldWinGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
+        startAndReachFinalLevel();
+        when(thirdNpc.isQuizCompleted()).thenReturn(true);
 
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-
-        // Reach level 3.
-        game.tryAdvanceLevel(true, true);
-        game.tryAdvanceLevel(true, true);
-
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(thirdNpc, true);
 
         assertEquals(GameState.WON, game.getState());
     }
 
     @Test
     void deadPlayerShouldLoseEvenWhenWinningConditionsAreMet() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-
-        // Reach level 3 while alive.
-        game.tryAdvanceLevel(true, true);
-        game.tryAdvanceLevel(true, true);
-
+        startAndReachFinalLevel();
+        when(thirdNpc.isQuizCompleted()).thenReturn(true);
         when(player.isDead()).thenReturn(true);
-        game.tryAdvanceLevel(true, true);
+
+        game.tryAdvanceLevel(thirdNpc, true);
 
         assertEquals(GameState.LOST, game.getState());
     }
 
     @Test
     void deadPlayerShouldNotChangeNotStartedGame() {
-        Player player = mock(Player.class);
         when(player.isDead()).thenReturn(true);
+        when(firstNpc.isQuizCompleted()).thenReturn(true);
 
-        Game game = new Game(player, mock(LevelMapFactory.class));
-
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(firstNpc, true);
 
         assertEquals(GameState.NOT_STARTED, game.getState());
+        verifyNoInteractions(factory);
     }
 
     @Test
     void completedQuizWithoutLadderShouldNotWinGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
+        startAndReachFinalLevel();
+        when(thirdNpc.isQuizCompleted()).thenReturn(true);
 
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-
-        // Reach level 3.
-        game.tryAdvanceLevel(true, true);
-        game.tryAdvanceLevel(true, true);
-
-        game.tryAdvanceLevel(true, false);
+        game.tryAdvanceLevel(thirdNpc, false);
 
         assertEquals(GameState.RUNNING, game.getState());
+        assertSame(thirdLevel, game.getCurrentLevel());
     }
 
     @Test
     void completedQuizOnLadderShouldGenerateNextLevel() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        LevelMap secondLevel = mock(LevelMap.class);
-        when(factory.create(2)).thenReturn(secondLevel);
-
-        Game game = new Game(player, factory);
+        when(firstNpc.isQuizCompleted()).thenReturn(true);
         game.start();
 
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(firstNpc, true);
 
         verify(factory).create(2);
         assertSame(secondLevel, game.getCurrentLevel());
@@ -162,36 +146,11 @@ public class GameTest {
     }
 
     @Test
-    void startingGameShouldGenerateFirstLevel() {
-        Player player = mock(Player.class);
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        LevelMap firstLevel = mock(LevelMap.class);
-
-        when(factory.create(1)).thenReturn(firstLevel);
-
-        Game game = new Game(player, factory);
-        game.start();
-
-        verify(factory).create(1);
-        assertSame(firstLevel, game.getCurrentLevel());
-        assertEquals(GameState.RUNNING, game.getState());
-    }
-
-    @Test
     void winningShouldNotGenerateAnotherLevel() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
+        startAndReachFinalLevel();
+        when(thirdNpc.isQuizCompleted()).thenReturn(true);
 
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        Game game = new Game(player, factory);
-        game.start();
-
-        // Reach level 3.
-        game.tryAdvanceLevel(true, true);
-        game.tryAdvanceLevel(true, true);
-
-        // Complete the final level.
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(thirdNpc, true);
 
         assertEquals(GameState.WON, game.getState());
         verify(factory).create(1);
@@ -202,42 +161,36 @@ public class GameTest {
 
     @Test
     void completingThreeLevelsShouldWinGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        Game game = new Game(player, factory);
+        when(firstNpc.isQuizCompleted()).thenReturn(true);
+        when(secondNpc.isQuizCompleted()).thenReturn(true);
+        when(thirdNpc.isQuizCompleted()).thenReturn(true);
         game.start();
 
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(firstNpc, true);
+
+        assertSame(secondLevel, game.getCurrentLevel());
         assertEquals(GameState.RUNNING, game.getState());
 
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(secondNpc, true);
+
+        assertSame(thirdLevel, game.getCurrentLevel());
         assertEquals(GameState.RUNNING, game.getState());
 
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(thirdNpc, true);
+
         assertEquals(GameState.WON, game.getState());
-
         verify(factory).create(1);
         verify(factory).create(2);
         verify(factory).create(3);
         verifyNoMoreInteractions(factory);
     }
 
-
     @Test
     void incompleteQuizShouldNotGenerateNextLevel() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        LevelMap firstLevel = mock(LevelMap.class);
-        when(factory.create(1)).thenReturn(firstLevel);
-
-        Game game = new Game(player, factory);
+        when(firstNpc.isQuizCompleted()).thenReturn(false);
         game.start();
 
-        game.tryAdvanceLevel(false, true);
+        game.tryAdvanceLevel(firstNpc, true);
 
         assertSame(firstLevel, game.getCurrentLevel());
         assertEquals(GameState.RUNNING, game.getState());
@@ -247,17 +200,10 @@ public class GameTest {
 
     @Test
     void completedQuizWithoutLadderShouldNotGenerateNextLevel() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        LevelMap firstLevel = mock(LevelMap.class);
-        when(factory.create(1)).thenReturn(firstLevel);
-
-        Game game = new Game(player, factory);
+        when(firstNpc.isQuizCompleted()).thenReturn(true);
         game.start();
 
-        game.tryAdvanceLevel(true, false);
+        game.tryAdvanceLevel(firstNpc, false);
 
         assertSame(firstLevel, game.getCurrentLevel());
         assertEquals(GameState.RUNNING, game.getState());
@@ -267,12 +213,8 @@ public class GameTest {
 
     @Test
     void mentalBreakdownWithRecoveryItemShouldFreezeGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
         when(player.isMentalBreakdown()).thenReturn(true);
         when(player.hasMentalRecoveryItem()).thenReturn(true);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
         game.start();
 
         game.updateState();
@@ -283,12 +225,8 @@ public class GameTest {
 
     @Test
     void mentalBreakdownWithoutRecoveryItemShouldLoseGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
         when(player.isMentalBreakdown()).thenReturn(true);
         when(player.hasMentalRecoveryItem()).thenReturn(false);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
         game.start();
 
         game.updateState();
@@ -298,18 +236,9 @@ public class GameTest {
 
     @Test
     void recoveredPlayerShouldUnfreezeGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-        when(player.isMentalBreakdown()).thenReturn(true);
-        when(player.hasMentalRecoveryItem()).thenReturn(true);
+        startAndFreezeGame();
 
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-        game.updateState();
-
-        assertEquals(GameState.FROZEN, game.getState());
-
-        // Simulate restored mental health after consuming an item.
+        // Simulate restored mental health.
         when(player.isMentalBreakdown()).thenReturn(false);
         game.updateState();
 
@@ -318,16 +247,7 @@ public class GameTest {
 
     @Test
     void playerDyingWhileFrozenShouldLoseGame() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-        when(player.isMentalBreakdown()).thenReturn(true);
-        when(player.hasMentalRecoveryItem()).thenReturn(true);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-        game.updateState();
-
-        assertEquals(GameState.FROZEN, game.getState());
+        startAndFreezeGame();
 
         when(player.isDead()).thenReturn(true);
         game.updateState();
@@ -337,16 +257,7 @@ public class GameTest {
 
     @Test
     void waitingWithoutConsumingItemShouldKeepGameFrozen() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-        when(player.isMentalBreakdown()).thenReturn(true);
-        when(player.hasMentalRecoveryItem()).thenReturn(true);
-
-        Game game = new Game(player, mock(LevelMapFactory.class));
-        game.start();
-        game.updateState();
-
-        assertEquals(GameState.FROZEN, game.getState());
+        startAndFreezeGame();
 
         game.updateState();
 
@@ -356,26 +267,36 @@ public class GameTest {
 
     @Test
     void frozenPlayerShouldNotAdvanceLevel() {
-        Player player = mock(Player.class);
-        when(player.isDead()).thenReturn(false);
-        when(player.isMentalBreakdown()).thenReturn(true);
-        when(player.hasMentalRecoveryItem()).thenReturn(true);
+        when(firstNpc.isQuizCompleted()).thenReturn(true);
+        startAndFreezeGame();
 
-        LevelMapFactory factory = mock(LevelMapFactory.class);
-        LevelMap firstLevel = mock(LevelMap.class);
-        when(factory.create(1)).thenReturn(firstLevel);
-
-        Game game = new Game(player, factory);
-        game.start();
-        game.updateState();
-
-        assertEquals(GameState.FROZEN, game.getState());
-
-        game.tryAdvanceLevel(true, true);
+        game.tryAdvanceLevel(firstNpc, true);
 
         assertEquals(GameState.FROZEN, game.getState());
         assertSame(firstLevel, game.getCurrentLevel());
         verify(factory).create(1);
         verifyNoMoreInteractions(factory);
+    }
+
+    private void startAndReachFinalLevel() {
+        when(firstNpc.isQuizCompleted()).thenReturn(true);
+        when(secondNpc.isQuizCompleted()).thenReturn(true);
+
+        game.start();
+        game.tryAdvanceLevel(firstNpc, true);
+        game.tryAdvanceLevel(secondNpc, true);
+
+        assertSame(thirdLevel, game.getCurrentLevel());
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
+    private void startAndFreezeGame() {
+        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(true);
+
+        game.start();
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
     }
 }

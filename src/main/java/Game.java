@@ -44,18 +44,14 @@ public class Game {
         }
     }
 
-    public void tryAdvanceLevel(boolean quizCompleted,
-                                boolean onLadder) {
+    public void tryAdvanceLevel(NPC npc, boolean onLadder) {
+        updateState();
+
         if (gameState != GameState.RUNNING) {
             return;
         }
 
-        if (player.isDead()) {
-            gameState = GameState.LOST;
-            return;
-        }
-
-        if (quizCompleted && onLadder) {
+        if (npc.isQuizCompleted() && onLadder) {
             if (currentLevelNumber == 3) {
                 gameState = GameState.WON;
             } else {
