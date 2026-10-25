@@ -23,18 +23,18 @@ public class NPCTest {
         npc = new NPC(0, 0, "Hej!", quiz);
     }
 
-    @Test
+    @Test // npc har rätt dialog
     void npcShouldHaveDialogue(){
         NPC npc = new NPC(0,0,"Hej! Jag har en fråga till dig.");
         assertEquals("Hej! Jag har en fråga till dig.", npc.getDialogue());
     }
 
-    @Test
+    @Test //rätt quiz objekt
     void npcShouldHaveQuiz(){
         assertSame(quiz, npc.getQuiz());
     }
 
-    @Test
+    @Test //true när spelaren svarar rätt
     void npcShouldAcceptCorrectAnswer(){
         assertTrue(npc.answerQuestion(0));
     }
@@ -104,20 +104,20 @@ public class NPCTest {
         assertFalse(npcWithoutQuiz.isQuizCompleted());
     }
 
-    @Test
+    @Test //svar ska inte accepteras när npc saknar frågor
     void npcWithoutQuizShouldHandleAnswerSafely(){
         NPC npcWithoutQuiz = new NPC(0,0, "Hej");
         assertFalse(npcWithoutQuiz.answerQuestion(0));
     }
 
     @Test
-    void wrongAnswerShouldKeepAnswerInArray(){
+    void wrongAnswerShouldKeepQuestionInArray(){
         npc.answerQuestion(1);
         assertSame(quiz, npc.getQuiz());
     }
 
     @Test
-    void correctAnswerShouldRemoveAnswerFromArray(){
+    void correctAnswerShouldRemoveQuestion(){
         npc.answerQuestion(0);
         assertNull(npc.getQuiz());
     }
