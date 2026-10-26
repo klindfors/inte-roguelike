@@ -7,6 +7,8 @@ public class Room {
     private int height;
     private TerrainTile[][] room;
     private final Random rand;
+    private int doorX;
+    private int doorY;
 
     public Room(String n, int w, int h, Random r){
         this.rand = r;
@@ -44,7 +46,18 @@ public class Room {
             y = 1 + r.nextInt(height - 2); //avoid placing doors on corner tiles
             x = r.nextBoolean() ? 0 : width - 1; //leftmost, or rightmost col
         }
-        t[x][y] = new Door(x, y); //swap wall for door
+        t[x][y] = new Door(x, y);
+        this.doorX = x;
+        this.doorY = y;
+        //swap wall for door
+    }
+
+    public int getDoorX(){
+        return doorX;
+    }
+
+    public int getDoorY(){
+        return doorY;
     }
 
     public TerrainTile[][] roomMatrix(){

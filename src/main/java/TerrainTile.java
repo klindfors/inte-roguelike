@@ -26,10 +26,16 @@ abstract class TerrainTile {
         return symbol;
     }
     public boolean isPassable(){
+
         return passable;
     }
     public void setPassable(boolean b){
         this.passable = b;
+    }
+
+    public void setPosition(int x, int y){
+        this.x = x;
+        this.y = y;
     }
 
 }
