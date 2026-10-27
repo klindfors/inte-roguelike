@@ -43,7 +43,7 @@ public class PlayerNPCIntegrationTest {
     void correctAnswerDoesNotReduceMentalHealth() {
         interaction.answerQuestion(player, npc, 0);
         assertEquals(5, player.getMentalHealth());
-        assertTrue(npc.hasAnsweredQuestion());
+        assertTrue(npc.isQuizCompleted());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class PlayerNPCIntegrationTest {
         assertTrue(player.isMentalBreakdown());
 
         interaction.answerQuestion(player, npc, 1);
-        assertFalse(npc.hasAnsweredQuestion());
+        assertFalse(npc.isQuizCompleted());
     }
 
     @Test
@@ -75,11 +75,11 @@ public class PlayerNPCIntegrationTest {
         assertTrue(player.isMentalBreakdown());
 
         interaction.answerQuestion(player, npc, 1);
-        assertFalse(npc.hasAnsweredQuestion());
+        assertFalse(npc.isQuizCompleted());
 
         player.restoreMentalHealth(2);
         interaction.answerQuestion(player, npc, 0);
-        assertTrue(npc.hasAnsweredQuestion());
+        assertTrue(npc.isQuizCompleted());
         assertEquals(2, player.getMentalHealth());
     }
 
@@ -98,7 +98,7 @@ public class PlayerNPCIntegrationTest {
 
         assertDoesNotThrow(
                 () -> interaction.answerQuestion(player, npcWithoutQuiz, 1));
-        assertFalse(npcWithoutQuiz.hasAnsweredQuestion());
+        assertFalse(npcWithoutQuiz.isQuizCompleted());
         assertEquals(5, player.getMentalHealth());
     }
 
@@ -131,4 +131,7 @@ public class PlayerNPCIntegrationTest {
 
         assertEquals(5, player.getMentalHealth());
     }
+
+
+
 }
