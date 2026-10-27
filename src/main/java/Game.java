@@ -68,4 +68,8 @@ public class Game {
         return currentLevel;
     }
 
+    public Player getPlayer(){
+        return player;
+    }
+
 }
