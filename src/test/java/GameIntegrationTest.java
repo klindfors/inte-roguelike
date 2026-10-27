@@ -118,6 +118,28 @@ public class GameIntegrationTest {
         assertEquals(GameState.FROZEN, game.getState());
     }
 
+    @Test
+    void playerShouldRecoverAfterBreakdownCausedByWrongAnswers() {
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        player.pickUp(coffee);
+
+        NPC npc = new NPC(1, 1, "Answer the question", createQuestion());
+        game.start();
+
+        answerIncorrectlyUntilBreakdown(npc);
+
+        assertEquals(GameState.FROZEN, game.getState());
+        assertEquals(0, player.getMentalHealth());
+        assertTrue(player.hasItem(coffee));
+
+        assertTrue(player.useMentalConsumable());
+        game.updateState();
+
+        assertEquals(3, player.getMentalHealth());
+        assertFalse(player.hasItem(coffee));
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
     private Quiz createQuestion() {
         return new Quiz(
                 "What is 1 + 1?",
@@ -138,4 +160,6 @@ public class GameIntegrationTest {
             }
         }
     }
+
+
 }
