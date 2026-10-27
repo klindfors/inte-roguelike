@@ -9,6 +9,6 @@ public class CoffeeMachineTest {
 
     @Test
     void printSymbol(){
-        assertThat(testMachine.getSymbol(), is('\uDD32'));
+        assertThat(testMachine.getSymbol(), is('C'));
     }
 }

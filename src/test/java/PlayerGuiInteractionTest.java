@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PlayerGuiInteractionTest {
@@ -20,6 +19,7 @@ class PlayerGuiInteractionTest {
 
         assertEquals(3,player.getX() );
         assertEquals(3,player.getY() );
+
     }
 
     @Test
@@ -131,6 +131,20 @@ class PlayerGuiInteractionTest {
         assertFalse(moved);
         assertEquals(10,player.getX() );
         assertEquals(21,player.getY() );
+    }
+
+    @Test
+    void playerMovesToPassableTileAndGuiUpdates() { //tests non-mocked gui and player interaction
+        Gui gui = new Gui();
+        Player player = new Player(6, 6);
+        gui.placePlayer(player.getX(),player.getY());
+        assertEquals(gui.getTop(6,6), '@'); // assert that player position matches placement on gui.
+        PlayerGuiInteraction interaction = new PlayerGuiInteraction();
+        interaction.tryMove(player, gui, 1, 0);
+        assertEquals(7, player.getX() );
+        assertEquals(6, player.getY() );
+        assertTrue(gui.getCell(7,6).contains("@")); //assert that gui also is updated; that player was displayed on the GuiMap position before, and is not displayed there after movement.
+        assertFalse(gui.getCell(6,6).contains("@"));
     }
 
 

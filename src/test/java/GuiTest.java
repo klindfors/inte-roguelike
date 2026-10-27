@@ -7,10 +7,14 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 public class GuiTest {
     Gui fromFile = new Gui(Path.of("src/main/resources/level1.txt")); //from file, hard coded path to test
     //Gui fromMap = new Gui(new LevelMap(1, 3, 67));
+
+    private static final Path LEVEL1 = Path.of("src/main/resources/level1.txt");
+
 
     @Test
     void fileHasStandardSize() {
@@ -44,6 +48,7 @@ public class GuiTest {
     @Disabled("todo: push adds char to end of cell string, ie '.' becomes '.@'")
     void pushAddsToCell() {
 
+
     }
 
     @Test
@@ -60,7 +65,7 @@ public class GuiTest {
 
     @Test
     @Disabled("todo: pop on a terrain-only cell throws IllegalStateException")
-    void cannotPopTerrain() {
+    void cannotPopBaseTerrain() {
 
     }
 
@@ -83,14 +88,91 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: missing txt file throws RuntimeException")
     void missingFileThrows() {
-
+        Path missing = Path.of("src/main/resources/ThisFileDoesNotExist_do_not_create_it_pls.txt");
+        RuntimeException e = Assertions.assertThrows(RuntimeException.class, () -> new Gui(missing));
+        assertThat(e.getCause(), is(instanceOf(IOException.class)));
     }
 
     @Test
-    @Disabled("todo: no cell is null or empty")
+    @Disabled("todo: no cell may be null or empty")
     void noEmptyCells() {
 
+    }
+
+    private static LevelMap levelFromFile(Path path) throws IOException {
+        List<String> rows = Files.readAllLines(path);
+        TerrainTile[][] g = new TerrainTile[rows.get(0).length()][rows.size()];
+        for (int y = 0; y < rows.size(); y++) {
+            for (int x = 0; x < rows.get(y).length(); x++) {
+                g[x][y] = switch (rows.get(y).charAt(x)) {
+                    case '#' -> new Wall(x, y);
+                    case '.' -> new Floor(x, y);
+                    case '+' -> new Door(x, y);
+                    case '>' -> new Staircase("Staircase", true, '>', x, y);
+                    default -> throw new IllegalArgumentException("Unknown symbol at " + x + "," + y);
+                };
+            }
+        }
+        LevelMap lvl = mock(LevelMap.class);
+        when(lvl.getLevel()).thenReturn(g);
+        return lvl;
+    }
+
+    private static boolean step(Game game, Gui gui, int dx, int dy) {
+        return new PlayerGuiInteraction().tryMove(game.getPlayer(), gui, dx, dy);
+    }
+
+    private static Game startedGame(LevelMap lvl, int x, int y) {
+        LevelMapFactory factory = mock(LevelMapFactory.class);
+        when(factory.create(1)).thenReturn(lvl);
+        Game game = new Game(new Player(x, y), factory);
+        game.start();
+        return game;
+    }
+
+    private static Game level1Game() throws IOException {
+        LevelMap lvl = levelFromFile(LEVEL1);
+        int[] s = new Gui(lvl).findStart();
+        return startedGame(lvl, s[0], s[1]);
+    }
+
+
+    @Test
+    void level1PlayerMovesOnFloor() throws IOException {
+        Game game = level1Game();
+        Gui gui = new Gui(game);
+        gui.placePlayer(66, 6);
+        int x = game.getPlayer().getX();
+        int y = game.getPlayer().getY();
+        assertThat(step(game, gui, 1, 0), is(true));
+        assertThat(gui.getCell(x + 1, y), is(".@"));
+        assertThat(gui.getCell(x, y), is("."));
+    }
+
+
+    @Test
+    void level1PlayerBlockedByWall() throws IOException {
+        Game game = level1Game();
+        Gui gui = new Gui(game);
+        gui.placePlayer(5,5);
+        while (step(game, gui, -1, 0)) { }
+        assertThat(game.getPlayer().getX(), is(5));
+    }
+
+    @Test
+    void level1PlayerBlockedByDoor() throws IOException {
+        Game game = level1Game();
+        Gui gui = new Gui(game);
+        step(game, gui, 0, 1);
+        while (step(game, gui, 1, 0)) { }
+        assertThat(game.getPlayer().getX(), is(10));
+        assertThat(game.getPlayer().getY(), is(5));
+    }
+
+    @Test
+    void level1StartInWallRejected() throws IOException {
+        LevelMap lvl = levelFromFile(LEVEL1);
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, 2, 3)));
     }
 }
