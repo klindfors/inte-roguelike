@@ -9,6 +9,8 @@ class PlayerGuiInteractionTest {
     @Test
     void playerMovesToPassableTile() {
         Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
         Player player = new Player(2, 3);
         when(mockGui.getCell(3, 3))
                 .thenReturn(".a");
@@ -23,6 +25,8 @@ class PlayerGuiInteractionTest {
     @Test
     void playerCannotMoveThroughWall() {
         Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
         Player player = new Player(2, 3);
         when(mockGui.getCell(3, 3))
                 .thenReturn("#T");
@@ -38,6 +42,8 @@ class PlayerGuiInteractionTest {
     @Test
     void playerCannotMoveThroughClosedDoor() {
         Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
         Player player = new Player(2, 3);
         when(mockGui.getCell(3, 3))
                 .thenReturn(".+");
@@ -53,6 +59,8 @@ class PlayerGuiInteractionTest {
     @Test
     void playerCannotMoveThroughCoffeeMachine() {
         Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
         Player player = new Player(2, 3);
         when(mockGui.getCell(3, 3))
                 .thenReturn(".C");
@@ -63,6 +71,66 @@ class PlayerGuiInteractionTest {
         assertFalse(moved);
         assertEquals(2,player.getX() );
         assertEquals(3,player.getY() );
+    }
+
+    @Test
+    void playerCannotMoveOutsideRightBorder() {
+        Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
+        Player player = new Player(79, 10);
+
+        PlayerGuiInteraction interaction = new PlayerGuiInteraction();
+        boolean moved = interaction.tryMove(player, mockGui, 1, 0);
+
+        assertFalse(moved);
+        assertEquals(79,player.getX() );
+        assertEquals(10,player.getY() );
+    }
+
+    @Test
+    void playerCannotMoveOutsideLeftBorder() {
+        Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
+        Player player = new Player(0, 10);
+
+        PlayerGuiInteraction interaction = new PlayerGuiInteraction();
+        boolean moved = interaction.tryMove(player, mockGui, -1, 0);
+
+        assertFalse(moved);
+        assertEquals(0,player.getX() );
+        assertEquals(10,player.getY() );
+    }
+
+    @Test
+    void playerCannotMoveOutsideTopBorder() {
+        Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
+        Player player = new Player(10, 0);
+
+        PlayerGuiInteraction interaction = new PlayerGuiInteraction();
+        boolean moved = interaction.tryMove(player, mockGui, 0, -1);
+
+        assertFalse(moved);
+        assertEquals(10,player.getX() );
+        assertEquals(0,player.getY() );
+    }
+
+    @Test
+    void playerCannotMoveOutsideBottomBorder() {
+        Gui mockGui = mock(Gui.class);
+        when(mockGui.getWidth()).thenReturn(80);
+        when(mockGui.getHeight()).thenReturn(22);
+        Player player = new Player(10, 21);
+
+        PlayerGuiInteraction interaction = new PlayerGuiInteraction();
+        boolean moved = interaction.tryMove(player, mockGui, 0, 1);
+
+        assertFalse(moved);
+        assertEquals(10,player.getX() );
+        assertEquals(21,player.getY() );
     }
 
 
