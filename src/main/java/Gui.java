@@ -8,15 +8,15 @@ public class Gui {
     //levelMap passed to gui with less data (h: 22, w: 80)
     //textbox (h: 2, w: 80) ignored currently, only displays map
 
-    public String [][] GUI; //detta är kartan, representerad av strängar.
+    public String [][] GuiMap; //detta är kartan, representerad av strängar.
 
     public Gui(LevelMap lvl){
         //takes in a generated LevelMap and transforms it to a GUI matrix.
         TerrainTile[][] level = lvl.getLevel();
-        GUI = new String[level.length][level[0].length];
+        GuiMap = new String[level.length][level[0].length];
         for (int x = 0; x < level.length; x++){
             for (int y = 0; y < level[0].length; y++){
-                GUI[x][y] = String.valueOf(level[x][y].getSymbol());
+                GuiMap[x][y] = String.valueOf(level[x][y].getSymbol());
             }
         }
     }
@@ -31,16 +31,17 @@ public class Gui {
         }
         if (rows.isEmpty()) throw new IllegalArgumentException("Map has no rows");
         int w = rows.get(0).length();
-        GUI = new String[w][rows.size()];
+        GuiMap = new String[w][rows.size()];
         for (int y = 0; y < rows.size(); y++){
             String row = rows.get(y);
             if (row.length() != w) throw new IllegalArgumentException("Row " + y + " has length " + row.length() + ", expected " + w);
             for (int x = 0; x < w; x++){
                 if ("#.+>".indexOf(row.charAt(x)) < 0) throw new IllegalArgumentException("Unknown symbol '" + row.charAt(x) + "' at " + x + "," + y);
-                GUI[x][y] = String.valueOf(row.charAt(x));
+                GuiMap[x][y] = String.valueOf(row.charAt(x));
             }
         }
     }
+    //possible extension: place items on floor coordinates, push them to floor strings
 
     public String getCell(int x, int y){
         return "#"; //hard coded method that returns an impassable tile
@@ -52,27 +53,27 @@ public class Gui {
     }
 
     public char getTop(int x, int y){
-        String cell = GUI[x][y];
+        String cell = GuiMap[x][y];
         return cell.charAt(cell.length() - 1);
     }
 
     public void push(int x, int y, char c){
-        GUI[x][y] = GUI[x][y] + c;
+        GuiMap[x][y] = GuiMap[x][y] + c;
     }
 
     public char pop(int x, int y){
-        String cell = GUI[x][y];
+        String cell = GuiMap[x][y];
         if (cell.length() < 2) throw new IllegalStateException("Cannot remove terrain at " + x + "," + y);
-        GUI[x][y] = cell.substring(0, cell.length() - 1);
+        GuiMap[x][y] = cell.substring(0, cell.length() - 1);
         return cell.charAt(cell.length() - 1);
     }
 
     public int getWidth(){
-        return GUI.length;
+        return GuiMap.length;
     }
 
     public int getHeight(){
-        return GUI[0].length;
+        return GuiMap[0].length;
     }
 
     public String render(){
