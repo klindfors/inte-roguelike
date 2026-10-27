@@ -48,7 +48,7 @@ public class NPCTest {
     @Test
     void npcShouldShowDialogueAfterCorrectAnswer() {
         npc.answerQuestion(0);
-        assertEquals("Rätt svar! Du får gå vidare", npc.getDialogue());
+        assertEquals("Rätt svar! Du får gå vidare.", npc.getDialogue());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class NPCTest {
         boolean secondAttempt = npc.answerQuestion(0);
 
         assertTrue(secondAttempt);
-        assertEquals("Rätt svar! Du får gå vidare", npc.getDialogue());
+        assertEquals("Rätt svar! Du får gå vidare.", npc.getDialogue());
     }
 
     @Test

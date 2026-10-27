@@ -3,6 +3,11 @@ import java.util.List;
 
 public class NPC extends GameCharacter{
 
+    private static final String RIGHT_ANSWER_DIALOGUE =
+            "Rätt svar! Du får gå vidare.";
+    private static final String WRONG_ANSWER_DIALOGUE =
+            "Fel svar! Du har förlorat ditt försök.";
+
     private String dialogue;
     private List<Quiz> questions = new ArrayList<>();
     private boolean hadQuestions;
@@ -26,7 +31,7 @@ public class NPC extends GameCharacter{
         super(x, y);
         this.dialogue = dialogue;
         if (questions != null) {
-            this.questions = new ArrayList<>(questions);
+            this.questions.addAll(questions);
             hadQuestions = true;
         }
 
@@ -54,10 +59,10 @@ public class NPC extends GameCharacter{
         }
         boolean correct = questions.get(0).answer(answer);
         if(correct){
-            dialogue = "Rätt svar! Du får gå vidare";
+            dialogue = RIGHT_ANSWER_DIALOGUE;
             questions.remove(0);
         }else{
-            dialogue = "Fel svar! Du har förlorat ditt försök.";
+            dialogue = WRONG_ANSWER_DIALOGUE;
         }
         return correct;
     }
