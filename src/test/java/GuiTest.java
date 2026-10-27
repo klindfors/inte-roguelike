@@ -1,5 +1,10 @@
 import org.junit.jupiter.api.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -20,15 +25,13 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: each cell matches the symbol of the corresponding TerrainTile in LevelMap")
-    void cellsMatchTiles() {
-
-    }
-
-    @Test
-    @Disabled("todo: each cell matches the char at the same position in the txt file")
-    void cellsMatchFile() {
-
+        void cellsMatchFile() throws IOException {
+        List<String> rows = Files.readAllLines(Path.of("src/main/resources/level1.txt"));
+        for (int y = 0; y < rows.size(); y++) {
+            for (int x = 0; x < rows.get(y).length(); x++) {
+                assertThat("cell " + x + "," + y, fromFile.getCell(x, y), is(String.valueOf(rows.get(y).charAt(x))));
+            }
+        }
     }
 
     @Test
