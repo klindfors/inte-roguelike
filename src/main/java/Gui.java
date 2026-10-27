@@ -8,6 +8,8 @@ public class Gui {
     //levelMap passed to gui with less data (h: 22, w: 80)
     //textbox (h: 2, w: 80) ignored currently, only displays map
 
+    private static final Path LEVEL1 = Path.of("src/main/resources/level1.txt");
+
     public String [][] GuiMap; //detta är kartan, representerad av strängar.
 
     public Gui(LevelMap lvl){
@@ -27,14 +29,14 @@ public class Gui {
         try {
             rows = Files.readAllLines(path);
         } catch (IOException e){
-            throw new RuntimeException("Could not read map file " + path, e);
+            throw new RuntimeException("Could not read map file from " + path, e);
         }
-        if (rows.isEmpty()) throw new IllegalArgumentException("Map has no rows");
+        if (rows.isEmpty()) throw new IllegalArgumentException("Illegal level map: The map has no rows");
         int w = rows.get(0).length();
         GuiMap = new String[w][rows.size()];
         for (int y = 0; y < rows.size(); y++){
             String row = rows.get(y);
-            if (row.length() != w) throw new IllegalArgumentException("Row " + y + " has length " + row.length() + ", expected " + w);
+            if (row.length() != w) throw new IllegalArgumentException("Illegal level map: The row " + y + " has length " + row.length() + ", when the expected length is " + w);
             for (int x = 0; x < w; x++){
                 if ("#.+>".indexOf(row.charAt(x)) < 0) throw new IllegalArgumentException("Unknown symbol '" + row.charAt(x) + "' at " + x + "," + y);
                 GuiMap[x][y] = String.valueOf(row.charAt(x));
@@ -43,13 +45,20 @@ public class Gui {
     }
     //possible extension: place items on floor coordinates, push them to floor strings
 
+    public Gui(){ //for tests involving gui; if nothing specified, test on a prebuilt level1 map from txt file
+        this(LEVEL1);
+    }
+
     public String getCell(int x, int y){
-        return "#"; //hard coded method that returns an impassable tile
-        //return GUI[x][y];
+        return GuiMap[x][y];
     }
 
     public String getPassableCell(int x, int y){
         return ".%ac"; //hard coded method that returns a passable tile
+    }
+
+    public String getImpassableCell(int x, int y){
+        return "#%ac"; //hard coded method that returns a passable tile
     }
 
     public char getTop(int x, int y){
