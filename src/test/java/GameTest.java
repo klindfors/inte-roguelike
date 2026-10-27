@@ -345,4 +345,9 @@ public class GameTest {
         verify(factory).create(3);
         verifyNoMoreInteractions(factory);
     }
+
+    @Test
+    void getPlayerShouldReturnThePlayerUsedToCreateGame() {
+        assertSame(player, game.getPlayer());
+    }
 }
