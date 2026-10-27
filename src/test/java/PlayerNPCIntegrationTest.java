@@ -43,7 +43,7 @@ public class PlayerNPCIntegrationTest {
     void correctAnswerDoesNotReduceMentalHealth() {
         interaction.answerQuestion(player, npc, 0);
         assertEquals(5, player.getMentalHealth());
-        assertTrue(npc.hasAnsweredQuestion());
+        assertTrue(npc.isQuizCompleted());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class PlayerNPCIntegrationTest {
         assertTrue(player.isMentalBreakdown());
 
         interaction.answerQuestion(player, npc, 1);
-        assertFalse(npc.hasAnsweredQuestion());
+        assertFalse(npc.isQuizCompleted());
     }
 
     @Test
@@ -75,11 +75,11 @@ public class PlayerNPCIntegrationTest {
         assertTrue(player.isMentalBreakdown());
 
         interaction.answerQuestion(player, npc, 1);
-        assertFalse(npc.hasAnsweredQuestion());
+        assertFalse(npc.isQuizCompleted());
 
         player.restoreMentalHealth(2);
         interaction.answerQuestion(player, npc, 0);
-        assertTrue(npc.hasAnsweredQuestion());
+        assertTrue(npc.isQuizCompleted());
         assertEquals(2, player.getMentalHealth());
     }
 
@@ -98,7 +98,7 @@ public class PlayerNPCIntegrationTest {
 
         assertDoesNotThrow(
                 () -> interaction.answerQuestion(player, npcWithoutQuiz, 1));
-        assertFalse(npcWithoutQuiz.hasAnsweredQuestion());
+        assertFalse(npcWithoutQuiz.isQuizCompleted());
         assertEquals(5, player.getMentalHealth());
     }
 
@@ -131,4 +131,31 @@ public class PlayerNPCIntegrationTest {
 
         assertEquals(5, player.getMentalHealth());
     }
+
+    @Test
+    void playerCanRetryCsvQuestionAndMoveToNextQuestion(){
+        List<Quiz> questions = QuizBank.getQuizzesForLevel(1);
+        assertEquals(6, questions.size());
+
+        Quiz firstQuiz = questions.get(0);
+        Quiz secondQuiz = questions.get(1);
+
+        //NPC med frågor från filen
+        NPC csvNPC = new NPC(
+                1,2,"Svara på mina frågor",questions
+        );
+        assertSame(firstQuiz,csvNPC.getQuiz());
+
+        interaction.answerQuestion(player,csvNPC, 0);
+        assertEquals(4, player.getMentalHealth());
+        assertSame(firstQuiz,csvNPC.getQuiz());
+        assertFalse(csvNPC.isQuizCompleted());
+
+        interaction.answerQuestion(player, csvNPC, 1);
+        assertEquals(4, player.getMentalHealth());
+        assertSame(secondQuiz, csvNPC.getQuiz());
+        assertFalse(csvNPC.isQuizCompleted());
+    }
+
+
 }
