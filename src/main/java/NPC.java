@@ -49,10 +49,6 @@ public class NPC extends GameCharacter{
         return questions.get(0);
     }
 
-    //public boolean hasAnsweredQuestion() {
-    //    return hadQuestions && questions.isEmpty();
-    //}
-
     public boolean answerQuestion(int answer){
         if (questions.isEmpty()){
             return false;
