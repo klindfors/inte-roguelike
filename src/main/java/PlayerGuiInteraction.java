@@ -3,8 +3,9 @@ public class PlayerGuiInteraction {
         public boolean tryMove(Player player, Gui gui, int dx, int dy) {
             int newX = player.getX() + dx;
             int newY = player.getY() + dy;
-            if(newX >= gui.getWidth()){
-                return  false;
+            if(newX >= gui.getWidth() || newX < 0 ||
+                    newY >= gui.getHeight() || newY < 0) {
+                return false;
             }
             String cell = gui.getCell(newX, newY);
             if(!cell.contains("#") && !cell.contains("+") && !cell.contains("C")) {
