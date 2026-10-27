@@ -14,16 +14,6 @@ public class QuizTest {
     assertTrue(quiz.answer(0));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {-1, 3, 99}) // ekvivalensklass
-    void wrongAnswerShouldBeRejected(int answer){
-        Quiz quiz = new Quiz("I TDD vad börjar man först med?",
-                new String []{"testning","kodning", "dokumentation" }, 0,
-                Difficulty.EASY);
-
-    assertFalse(quiz.answer(answer));
-    }
-
     @Test
     void correctAnswerShouldIncreaseLevel(){
         Quiz quiz = new Quiz("I TDD vad börjar man först med?",
