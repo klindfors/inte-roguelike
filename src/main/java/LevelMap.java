@@ -42,6 +42,25 @@ public class LevelMap {
 
     }
 
+    static boolean canPlace(TerrainTile[][] grid, Room room, int ox, int oy){
+        return false;
+    }
+
+    static void placeRoom(TerrainTile[][] grid, Room room, int ox, int oy){
+    }
+
+    static int[] outsideDoor(Room room, int ox, int oy){
+        return new int[2];
+    }
+
+    static List<int[]> findPath(TerrainTile[][] grid, int sx, int sy, int gx, int gy){
+        return null;
+    }
+
+    static boolean connect(TerrainTile[][] grid, Room a, int ax, int ay, Room b, int bx, int by){
+        return false;
+    }
+
     public TerrainTile[][] getLevel(){
         return level.clone();
     }
