@@ -152,6 +152,38 @@ class GameCharacterTest {
         assertEquals(3,character.getPhysicalHealth());
     }
 
+    @Test
+    void movingRightUpdatesPosition() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.move(1, 0);
+        assertEquals(3, character.getX());
+        assertEquals(3, character.getY());
+    }
+
+    @Test
+    void movingLeftUpdatesPosition() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.move(-1, 0);
+        assertEquals(1, character.getX());
+        assertEquals(3, character.getY());
+    }
+
+    @Test
+    void movingUpUpdatesPosition() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.move(0, -1);
+        assertEquals(2, character.getX());
+        assertEquals(2, character.getY());
+    }
+
+    @Test
+    void movingDownUpdatesPosition() {
+        GameCharacter character = new TestCharacter(2, 3);
+        character.move(0, 1);
+        assertEquals(2, character.getX());
+        assertEquals(4, character.getY());
+    }
+
     private static class TestCharacter extends GameCharacter {
 
         private TestCharacter(int x, int y) {

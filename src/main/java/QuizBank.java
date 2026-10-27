@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,5 +42,54 @@ public class QuizBank {
         return quizzes.stream()
                 .filter(q-> q.getDifficulty() == difficulty)
                 .toList();
+    }
+
+    public static Difficulty getDifficultyForLevel(int levelNumber){
+        if (levelNumber == 1){
+            return Difficulty.EASY;
+        }
+        if (levelNumber == 2){
+            return Difficulty.MEDIUM;
+        }
+        if(levelNumber == 3){
+            return Difficulty.HARD;
+        }
+        throw new IllegalArgumentException("Ogiltigt bannummer");
+    }
+
+
+    public static List<Quiz> getQuizzesForLevel(List<Quiz> quizzes, int levelNumber){
+        Difficulty difficulty = getDifficultyForLevel(levelNumber);
+        return getQuizzesByDifficulty(quizzes,difficulty);
+    }
+
+    public static List<Quiz> loadQuizzesFromFile(){
+        List<Quiz> quizzes = new ArrayList<>();
+        Path path = Path.of("src/main/resources/quizzes.csv");
+
+        try{
+            List<String> lines = Files.readAllLines(path);
+            for (int i = 1; i < lines.size();i++ ){
+                String [] columns = lines.get(i).split(",",4);
+                String question = columns[0].replace("\"","");
+                String [] answers = columns[1]
+                        .replace("\"", "")
+                        .split(";");
+                int correctAnswer = Integer.parseInt(columns[2]);
+                Difficulty difficulty = Difficulty.valueOf(columns[3]);
+
+                quizzes.add(new Quiz(
+                        question,answers,correctAnswer,difficulty
+                ));
+            }
+        }catch(IOException ioException){
+            throw new RuntimeException("Kunde inte läsa quizzes.cvs filen",ioException);
+        }
+        return quizzes;
+    }
+
+    public static List<Quiz> getQuizzesForLevel(int levelNumber){
+    List<Quiz> quizzes = loadQuizzesFromFile();
+    return getQuizzesForLevel(quizzes,levelNumber);
     }
 }
