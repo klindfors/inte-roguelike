@@ -4,13 +4,13 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 public class GuiTest {
-    //Gui fromFile = new Gui(Path.of("src/main/resources/level1.txt")); //from file, hard coded path to test
+    Gui fromFile = new Gui(Path.of("src/main/resources/level1.txt")); //from file, hard coded path to test
     //Gui fromMap = new Gui(new LevelMap(1, 3, 67));
 
     @Test
-    @Disabled("todo: gui from txt file has standard dimensions w 80, h 22")
     void fileHasStandardSize() {
-
+        assertThat(fromFile.getWidth(), is(80));
+        assertThat(fromFile.getHeight(), is(22));
     }
 
     @Test
