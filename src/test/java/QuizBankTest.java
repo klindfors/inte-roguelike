@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,6 +149,25 @@ public class QuizBankTest {
         assertTrue(levelQuizzes.stream()
                 .allMatch(q->q.getDifficulty() == Difficulty.HARD)
         );
+    }
+
+    @Test
+    void shouldThrowRunTimeExceptionWhenReadingFile(){
+        Reader reader = new Reader() {
+            @Override
+            public int read(char[] cbuf, int off, int len) throws IOException {
+                throw new IOException("Simluerar ett läsfel");
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+        };
+        RuntimeException exception = assertThrows(
+                RuntimeException.class, ()-> QuizBank.loadQuizzes(reader)
+        );
+        assertTrue(exception.getCause() instanceof Exception);
     }
 
 

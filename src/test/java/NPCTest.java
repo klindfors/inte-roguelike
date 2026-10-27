@@ -48,7 +48,7 @@ public class NPCTest {
     @Test
     void npcShouldShowDialogueAfterCorrectAnswer() {
         npc.answerQuestion(0);
-        assertEquals("Rätt svar! Du får gå vidare", npc.getDialogue());
+        assertEquals("Rätt svar! Du får gå vidare.", npc.getDialogue());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class NPCTest {
         boolean secondAttempt = npc.answerQuestion(0);
 
         assertTrue(secondAttempt);
-        assertEquals("Rätt svar! Du får gå vidare", npc.getDialogue());
+        assertEquals("Rätt svar! Du får gå vidare.", npc.getDialogue());
     }
 
     @Test
@@ -146,4 +146,32 @@ public class NPCTest {
         assertTrue(npc.answerQuestion(1));
         assertNotSame(firstQuestion,npc.getQuiz());
     }
+
+    @Test
+    void npcShouldHandleNullQuestionList(){
+        NPC npcWithoutQuiz = new NPC(
+                0,0,"Hej", (List<Quiz>) null
+        );
+        assertNull(npcWithoutQuiz.getQuiz());
+        assertFalse(npcWithoutQuiz.isQuizCompleted());
+    }
+
+    @Test
+    void npcWithEmptyQuestionListShouldReturnNull(){
+        NPC npcEmptyQuiz = new NPC(
+                0,0,"Hej", new ArrayList<>()
+        );
+        assertNull(npcEmptyQuiz.getQuiz());
+    }
+
+    @Test
+    void npcShouldHandleNullSingleQuiz(){
+        NPC npcWithoutQuiz = new NPC(
+                0,0,"Hej", (Quiz) null
+        );
+        assertNull(npcWithoutQuiz.getQuiz());
+        assertFalse(npcWithoutQuiz.isQuizCompleted());
+    }
 }
+
+
