@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -444,6 +446,125 @@ public class GameIntegrationTest {
         assertFalse(player.hasItem(coffee));
         assertEquals(1, player.getX());
         assertEquals(0, player.getY());
+    }
+
+    @Test
+    void gameLoopShouldLoseOnSecondBreakdownWithoutRecoveryItem() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = mock(PlayerGuiInteraction.class);
+
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        player.pickUp(coffee);
+
+        game.start();
+        player.takeMentalDamage(5);
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        when(movement.tryMove(player, gui, 1, 0))
+                .thenAnswer(invocation -> {
+                    player.takeMentalDamage(3);
+                    return true;
+                });
+
+        List<GameAction> actions = List.of(
+                GameAction.USE_MENTAL_ITEM,
+                GameAction.MOVE_RIGHT,
+                GameAction.MOVE_DOWN
+        );
+        var actionIterator = actions.iterator();
+
+        game.runLoop(movement, gui, actionIterator);
+
+        assertFalse(player.hasItem(coffee));
+        assertEquals(0, player.getMentalHealth());
+        assertEquals(GameState.LOST, game.getState());
+
+        verify(movement).tryMove(player, gui, 1, 0);
+        verify(movement, never()).tryMove(player, gui, 0, 1);
+
+        assertTrue(actionIterator.hasNext());
+        assertEquals(GameAction.MOVE_DOWN, actionIterator.next());
+    }
+
+    @Test
+    void gameLoopShouldNotCheckForInputAfterGameIsWon() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = mock(PlayerGuiInteraction.class);
+
+        java.util.Iterator<GameAction> actions =
+                mock(java.util.Iterator.class);
+
+        LevelMap thirdLevel = mock(LevelMap.class);
+        when(factory.create(3)).thenReturn(thirdLevel);
+
+        NPC npc = mock(NPC.class);
+        when(npc.isQuizCompleted()).thenReturn(true);
+
+        game.start();
+        game.tryAdvanceLevel(npc, true); // Level 1 -> 2
+        game.tryAdvanceLevel(npc, true); // Level 2 -> 3
+        game.tryAdvanceLevel(npc, true); // Level 3 -> WON
+
+        assertEquals(GameState.WON, game.getState());
+
+        game.runLoop(movement, gui, actions);
+
+        verifyNoInteractions(actions);
+        verifyNoInteractions(movement);
+    }
+
+    @Test
+    void gameLoopShouldContinueAfterBlockedMovement() {
+        Gui gui = mock(Gui.class);
+        when(gui.getWidth()).thenReturn(3);
+        when(gui.getHeight()).thenReturn(3);
+
+        when(gui.getCell(1, 0)).thenReturn("#");
+        when(gui.getCell(0, 1)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        List<GameAction> actions = List.of(
+                GameAction.MOVE_RIGHT,
+                GameAction.MOVE_DOWN
+        );
+
+        game.start();
+
+        game.runLoop(movement, gui, actions.iterator());
+
+        assertEquals(0, player.getX());
+        assertEquals(1, player.getY());
+        assertEquals(GameState.RUNNING, game.getState());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "MOVE_UP,     0, -1",
+            "MOVE_DOWN,   0,  1",
+            "MOVE_LEFT,  -1,  0",
+            "MOVE_RIGHT,  1,  0"
+    })
+    void gameLoopShouldMapMovementActionToCorrectDirection(
+            GameAction action, int changeInX, int changeInY) {
+
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = mock(PlayerGuiInteraction.class);
+
+        game.start();
+
+        game.runLoop(
+                movement,
+                gui,
+                List.of(action).iterator()
+        );
+
+        verify(movement).tryMove(
+                player, gui, changeInX, changeInY
+        );
+        verifyNoMoreInteractions(movement);
     }
 
 
