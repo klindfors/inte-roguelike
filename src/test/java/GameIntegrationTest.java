@@ -167,6 +167,8 @@ public class GameIntegrationTest {
     void movingRightDuringRunningGameMovesPlayer() {
         // Arrange
         Gui gui = mock(Gui.class);
+        when(gui.getWidth()).thenReturn(80);
+        when(gui.getHeight()).thenReturn(22);
         when(gui.getCell(1, 0)).thenReturn(".");
 
         PlayerGuiInteraction movement = new PlayerGuiInteraction();
@@ -231,6 +233,8 @@ public class GameIntegrationTest {
     void gameLoopShouldProcessMultipleMovementActions() {
         // Arrange
         Gui gui = mock(Gui.class);
+        when(gui.getWidth()).thenReturn(80);
+        when(gui.getHeight()).thenReturn(22);
         when(gui.getCell(1, 0)).thenReturn(".");
         when(gui.getCell(1, 1)).thenReturn(".");
 
@@ -390,6 +394,8 @@ public class GameIntegrationTest {
     @Test
     void gameLoopShouldAllowRecoveryThenMovement() {
         Gui gui = mock(Gui.class);
+        when(gui.getWidth()).thenReturn(80);
+        when(gui.getHeight()).thenReturn(22);
         when(gui.getCell(1, 0)).thenReturn(".");
 
         PlayerGuiInteraction movement = new PlayerGuiInteraction();
@@ -420,6 +426,8 @@ public class GameIntegrationTest {
     @Test
     void gameLoopShouldBlockMovementUntilPlayerChoosesRecovery() {
         Gui gui = mock(Gui.class);
+        when(gui.getWidth()).thenReturn(80);
+        when(gui.getHeight()).thenReturn(22);
         when(gui.getCell(1, 0)).thenReturn(".");
 
         PlayerGuiInteraction movement = new PlayerGuiInteraction();

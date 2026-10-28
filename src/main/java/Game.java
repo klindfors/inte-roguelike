@@ -110,12 +110,8 @@ public class Game {
                 case INTERACT, OPEN_INVENTORY -> {
                     // Not connected yet.
                 }
-                case USE_MENTAL_ITEM -> {
-                    if (gameState == GameState.RUNNING
-                            || gameState == GameState.FROZEN) {
-                        player.useMentalConsumable();
-                    }
-                }
+
+                case USE_MENTAL_ITEM -> player.useMentalConsumable();
             }
 
             updateState();
