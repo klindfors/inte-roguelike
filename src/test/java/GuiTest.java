@@ -24,7 +24,6 @@ public class GuiTest {
     }
 
     @Test
-    //@Disabled("todo: gui from LevelMap has same dimensions as the LevelMap")
     void mapHasSameHeight() throws IOException {
         String guiTxt = fromFile.renderGuiMap(); //read level 1 from file
         assertEquals(new LevelMap(1, LEVEL1).getHeight(), guiTxt.lines().findFirst().orElse("").length()); //orElse method gives an optional string; this method will also run for empty maps
@@ -83,27 +82,27 @@ public class GuiTest {
     }
 
     @Test
-    //@Disabled("todo: pop on a terrain-only cell throws IllegalStateException")
     void cannotPopBaseTerrain() {
         Assertions.assertThrows(IllegalStateException.class, () -> new Gui(level1Game()).pop(2,0));
-
     }
 
     @Test
-    @Disabled("todo: txt file with unknown symbol throws IllegalArgumentException")
     void unknownSymbolThrows() {
-
+        Path strangemap = Path.of("src/main/resources/strangemap.txt");
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Gui(strangemap));
     }
 
     @Test
     @Disabled("todo: txt file with rows of different length throws IllegalArgumentException")
     void unevenRowsThrow() {
 
+
     }
 
     @Test
-    @Disabled("todo: empty txt file throws IllegalArgumentException")
     void emptyFileThrows() {
+        Path empty = Path.of("src/main/resources/empty.txt");
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Gui(empty));
 
     }
 
