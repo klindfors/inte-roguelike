@@ -14,28 +14,28 @@ class GameCharacterTest {
 
     @Test
     void constructorSetsDefaultHealth() {
-        GameCharacter character = new TestCharacter(2,3);
+        GameCharacter character = new TestCharacter(2, 3);
         assertEquals(5, character.getMentalHealth());
-        assertEquals(5,  character.getPhysicalHealth());
+        assertEquals(5, character.getPhysicalHealth());
     }
 
     @Test
     void constructorSetsCustomHealth() {
-        GameCharacter character = new TestCharacter(2,3, 10, 8);
+        GameCharacter character = new TestCharacter(2, 3, 10, 8);
         assertEquals(10, character.getPhysicalHealth());
         assertEquals(8, character.getMentalHealth());
     }
 
     @Test
-    void constructorSetsMaxHealth(){
-        GameCharacter character = new TestCharacter(2,3, 10, 8);
+    void constructorSetsMaxHealth() {
+        GameCharacter character = new TestCharacter(2, 3, 10, 8);
         assertEquals(10, character.getMaxPhysicalHealth());
         assertEquals(8, character.getMaxMentalHealth());
     }
 
     @Test
     void restorePhysicalHealthDoesNotExceedMaximum() {
-        GameCharacter character = new TestCharacter(2,3, 10, 8);
+        GameCharacter character = new TestCharacter(2, 3, 10, 8);
         assertEquals(10, character.getPhysicalHealth());
         character.takePhysicalDamage(4);
         character.restorePhysicalHealth(7);
@@ -43,37 +43,37 @@ class GameCharacterTest {
     }
 
     @Test
-    void physicalDamageReducesOnlyPhysicalHealth(){
+    void physicalDamageReducesOnlyPhysicalHealth() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takePhysicalDamage(2);
-        assertEquals(3,character.getPhysicalHealth());
+        assertEquals(3, character.getPhysicalHealth());
         assertEquals(5, character.getMentalHealth());
     }
 
     @Test
-    void physicalHealthDoesNotDropBelowZero(){
+    void physicalHealthDoesNotDropBelowZero() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takePhysicalDamage(10);
-        assertEquals(0,character.getPhysicalHealth());
+        assertEquals(0, character.getPhysicalHealth());
     }
 
     @Test
-    void mentalDamageReducesOnlyMentalHealth(){
+    void mentalDamageReducesOnlyMentalHealth() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takeMentalDamage(2);
-        assertEquals(3,character.getMentalHealth());
+        assertEquals(3, character.getMentalHealth());
         assertEquals(5, character.getPhysicalHealth());
     }
 
     @Test
-    void mentalHealthDoesNotDropBelowZero(){
+    void mentalHealthDoesNotDropBelowZero() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takeMentalDamage(10);
-        assertEquals(0,character.getMentalHealth());
+        assertEquals(0, character.getMentalHealth());
     }
 
     @Test
-    void restoringMentalHealthIncreasesMentalHealth(){
+    void restoringMentalHealthIncreasesMentalHealth() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takeMentalDamage(2);
         character.restoreMentalHealth(2);
@@ -81,11 +81,11 @@ class GameCharacterTest {
     }
 
     @Test
-    void mentalHealthDoesNotExceedMaximum(){
+    void mentalHealthDoesNotExceedMaximum() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takeMentalDamage(1);
         character.restoreMentalHealth(2);
-        assertEquals(5,character.getMentalHealth());
+        assertEquals(5, character.getMentalHealth());
     }
 
     // Funktionell testning: kontrollerar att fysisk hälsa återställs korrekt.
@@ -98,7 +98,7 @@ class GameCharacterTest {
     }
 
     @Test
-    void negativePhysicalDamageThrowsException(){
+    void negativePhysicalDamageThrowsException() {
         GameCharacter character = new TestCharacter(2, 3);
         assertThrows(IllegalArgumentException.class,
                 () -> character.takePhysicalDamage(-1));
@@ -108,7 +108,7 @@ class GameCharacterTest {
     void negativeMentalDamageThrowsException() {
         TestCharacter character = new TestCharacter(2, 3);
         assertThrows(IllegalArgumentException.class,
-                ()-> character.takeMentalDamage(-1));
+                () -> character.takeMentalDamage(-1));
     }
 
     @Test
@@ -128,7 +128,7 @@ class GameCharacterTest {
     @Test
     void negativeMaxPhysicalHealthThrowsException() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TestCharacter(2, 3, -5, 8) );
+                () -> new TestCharacter(2, 3, -5, 8));
     }
 
     @Test
@@ -141,7 +141,7 @@ class GameCharacterTest {
     void zeroPhysicalDamageDoesNotChangeHealth() {
         GameCharacter character = new TestCharacter(2, 3);
         character.takePhysicalDamage(0);
-        assertEquals(5,character.getPhysicalHealth());
+        assertEquals(5, character.getPhysicalHealth());
     }
 
     @Test
@@ -149,7 +149,7 @@ class GameCharacterTest {
         GameCharacter character = new TestCharacter(2, 3);
         character.takePhysicalDamage(2);
         character.restorePhysicalHealth(0);
-        assertEquals(3,character.getPhysicalHealth());
+        assertEquals(3, character.getPhysicalHealth());
     }
 
     @Test
