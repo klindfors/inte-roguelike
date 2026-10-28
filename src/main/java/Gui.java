@@ -122,14 +122,6 @@ public class Gui {
         return GuiMap[x][y];
     }
 
-    public String getPassableCell(int x, int y){
-        return ".%ac"; //hard coded method that returns a passable tile
-    }
-
-    public String getImpassableCell(int x, int y){
-        return "#%ac"; //hard coded method that returns a passable tile
-    }
-
     public char getTop(int x, int y){
         String cell = GuiMap[x][y];
         return cell.charAt(cell.length() - 1);

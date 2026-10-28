@@ -102,12 +102,8 @@ public class LevelMap {
     }
 
     public TerrainTile getTile(int x, int y){
-        TerrainTile returnTile = new TerrainTile(level[x][y].getName(), level[x][y].isPassable(),level[x][y].getSymbol(), level[x][y].getX(), level[x][y].getY()) {
-            public int getX() {
-                return super.getX();
-            }
-        } ;
-        return returnTile; //returns copy of tile
+
+        return level[x][y];
     }
 
 
