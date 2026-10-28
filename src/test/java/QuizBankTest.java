@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,7 +174,7 @@ public class QuizBankTest {
         );
         assertTrue(exception.getCause() instanceof Exception);
     }
-//IO Exepttion - dependecy injection, mocka felaktigt stream
+
 
 
     @ParameterizedTest
@@ -194,5 +195,17 @@ public class QuizBankTest {
                 )
         );
     }
+
+    @Test
+    void ShouldRejectCsvWhenMissingColumns(){
+        String csvFile = """
+                question, answers, correctAnswer, difficulty
+                Vad är TDD?, Testning;Kodning""";
+        assertThrows(
+                IllegalArgumentException.class,
+                ()-> QuizBank.loadQuizzes(new StringReader(csvFile))
+        );
+    }
+
 
 }

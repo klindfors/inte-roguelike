@@ -91,6 +91,9 @@ public class QuizBank {
                     continue;
                 }
                 String[] columns = line.split(",", 4);
+                if(columns.length!= 4){
+                    throw new IllegalArgumentException("Ogiltigt rad i filen");
+                }
                 String question = columns[0].replace("\"", "");
                 String[] answers = columns[1]
                         .replace("\"", "")
