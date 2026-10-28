@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class GuiTest {
@@ -23,10 +24,13 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: gui from LevelMap has same dimensions as the LevelMap")
-    void mapHasSameSize() {
+    //@Disabled("todo: gui from LevelMap has same dimensions as the LevelMap")
+    void mapHasSameHeight() throws IOException {
+        String guiTxt = fromFile.renderGuiMap(); //read level 1 from file
+        assertEquals(new LevelMap(1, LEVEL1).getHeight(), guiTxt.lines().findFirst().orElse("").length()); //orElse method gives an optional string; this method will also run for empty maps
 
     }
+
 
     @Test
         void cellsMatchFile() throws IOException {
@@ -41,6 +45,7 @@ public class GuiTest {
     @Test
     @Disabled("todo: render() returns the same text as the txt file")
     void renderMatchesFile() {
+        assertEquals(fromFile.renderGuiMap(), fromFile.toString());
 
     }
 
@@ -49,23 +54,35 @@ public class GuiTest {
     void pushAddsToCell() {
 
 
+
     }
 
     @Test
     @Disabled("todo: getTop returns the last char of the cell")
     void topIsLastChar() {
 
+
     }
 
     @Test
     @Disabled("todo: pop removes and returns the last char, terrain is kept")
-    void popRestoresCell() {
+    void popRestoresCell() throws IOException {
+        Game game = level1Game();
+        Gui gui = new Gui(game);
+        gui.placePlayer(66, 6);
+        int x = game.getPlayer().getX();
+        int y = game.getPlayer().getY();
+        assertThat(gui.getCell(x, y), is(".@"));
+        assertEquals(gui.pop(x,y), ('@')); //pops the correct char from the string
+        assertThat(gui.getCell(x , y), is("."));
+
 
     }
 
     @Test
-    @Disabled("todo: pop on a terrain-only cell throws IllegalStateException")
+    //@Disabled("todo: pop on a terrain-only cell throws IllegalStateException")
     void cannotPopBaseTerrain() {
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(level1Game()).pop(2,0));
 
     }
 
@@ -136,7 +153,6 @@ public class GuiTest {
         int[] s = new Gui(lvl).findStart();
         return startedGame(lvl, s[0], s[1]);
     }
-
 
     @Test
     void level1PlayerMovesOnFloor() throws IOException {
