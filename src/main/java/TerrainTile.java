@@ -25,6 +25,10 @@ abstract class TerrainTile {
     public char getSymbol(){
         return symbol;
     }
+
+    public void setSymbol(char c){
+        this.symbol = c;
+    }
     public boolean isPassable(){
 
         return passable;
