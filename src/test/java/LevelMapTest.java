@@ -59,13 +59,17 @@ public class LevelMapTest {
     @Test
      void noNullNextToFloor() {
         for (TerrainTile[] a : testLvl1.getLevel()) {
+        int checked = 0;
+        for (TerrainTile[] a : grid) {
             for (TerrainTile t : a) {
                 if (t instanceof Floor || t instanceof Door) {
-                    assertThat(neighbours(testLvl1.getLevel(), t.getX(), t.getY()), is(notNullValue()));
 
+                    checked++;
+                    assertThat("tile " + t.getX() + "," + t.getY(), neighbours(grid, t.getX(), t.getY()), not(hasItemInArray(nullValue())));
                 }
             }
         }
+        assertThat(checked, greaterThan(2));
     }
 
     private TerrainTile[] neighbours(TerrainTile[][] grid, int x, int y) {
