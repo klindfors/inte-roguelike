@@ -1,7 +1,13 @@
 import org.junit.jupiter.api.*;
+import org.mockito.internal.stubbing.answers.ThrowsException;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LevelMapTest {
     //todo: a levelmap must contain minimum 2 rooms
@@ -9,29 +15,36 @@ public class LevelMapTest {
     //todo: there must be a staircase in at least one room of the level.
     //if there is a locked door, there must exist a key somewhere on the map.
     LevelMap testLvl1 = new LevelMap(1, 3, 67);
+    LevelMap pathLvl1 = new LevelMap(1, Path.of("src/main/resources/level1.txt"));
 
+    public LevelMapTest() throws IOException {
+    }
+
+
+    //tests relating to levelmap generation, and from file
     @Test
     @Disabled("todo: all rooms connected to main map")
     void allRoomsConnected() {
+
 
         //must access door positions of levelmap
         //from each door, one shall be able to traverse to all other doors.
         //implementation might be bfs algorithm implementation, from all door positions, to all other doors.
     }
-        //spion: mocka ett interface och kolla att alla metoder blir anropade?
-
 
     @Test
-    @Disabled("todo: at least two rooms in level map")
+    //@Disabled("todo: at least two rooms in level map")
     void atLeastTwoRooms() {
         //constructor should possibly throw an exception if rooms are less than 2.
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new LevelMap(1, 1, 455454353));
 
     }
 
     @Test
     @Disabled("todo:all doors must have floor on both sides")
     void allDoorsHaveFloor(){
-        //check gui or levelmap
+
+
 
     }
 
@@ -64,6 +77,7 @@ public class LevelMapTest {
     }
 
     private TerrainTile[] neighbours(TerrainTile[][] grid, int x, int y) {
+        //ArrayList<TerrainTile> neighbourList
         //todo: write helper method
         return new TerrainTile[0];
     }
