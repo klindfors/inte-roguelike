@@ -3,9 +3,14 @@ import java.util.List;
 
 public class NPC extends GameCharacter{
 
+    private static final String RIGHT_ANSWER_DIALOGUE =
+            "Rätt svar! Du får gå vidare.";
+    private static final String WRONG_ANSWER_DIALOGUE =
+            "Fel svar! Du har förlorat ditt försök.";
+
     private String dialogue;
     private List<Quiz> questions = new ArrayList<>();
-    private boolean hadQuestions = false;
+    private boolean hadQuestions;
 
     public NPC (int x, int y, String dialogue){
         super(x,y);
@@ -17,17 +22,19 @@ public class NPC extends GameCharacter{
         this.dialogue = dialogue;
         if (quiz != null){
             this.questions.add(quiz);
+            hadQuestions = true;
         }
-        hadQuestions = true;
+
     }
 
     public NPC(int x, int y, String dialogue, List<Quiz> questions ){
         super(x, y);
         this.dialogue = dialogue;
         if (questions != null) {
-            this.questions = new ArrayList<>(questions);
+            this.questions.addAll(questions);
+            hadQuestions = true;
         }
-        hadQuestions = true;
+
     }
 
     public String getDialogue(){
@@ -37,12 +44,9 @@ public class NPC extends GameCharacter{
     public Quiz getQuiz() {
         if (questions == null || questions.isEmpty()) {
             return null;
+            //branchtäckning på 92% (NPCTest), jag har tre tester för T, FT, FF
         }
         return questions.get(0);
-    }
-
-    public boolean hasAnsweredQuestion() {
-        return hadQuestions && questions.isEmpty();
     }
 
     public boolean answerQuestion(int answer){
@@ -51,15 +55,16 @@ public class NPC extends GameCharacter{
         }
         boolean correct = questions.get(0).answer(answer);
         if(correct){
-            dialogue = "Rätt svar! Du får gå vidare";
+            dialogue = RIGHT_ANSWER_DIALOGUE;
             questions.remove(0);
         }else{
-            dialogue = "Fel svar! Du har förlorat ditt försök.";
+            dialogue = WRONG_ANSWER_DIALOGUE;
         }
         return correct;
     }
 
     public boolean isQuizCompleted(){
+
         return hadQuestions && questions.isEmpty();
     }
 

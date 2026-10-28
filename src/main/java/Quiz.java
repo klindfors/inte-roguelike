@@ -23,11 +23,11 @@ public class Quiz {
 
     }
 
-    public boolean answer(int answer){
-        if (answer < 0 || answer >= answers.length){
+    public boolean answer(int answerIndex){
+        if (answerIndex < 0 || answerIndex >= answers.length){
             return false;
         }
-        if(answer == correctAnswer){
+        if(answerIndex == correctAnswer){
             level++;
             return true;
         }else{
