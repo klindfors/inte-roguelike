@@ -69,10 +69,9 @@ public class LevelMapTest {
     }
 
     private TerrainTile[] neighbours(TerrainTile[][] grid, int x, int y) {
-        //ArrayList<TerrainTile> neighbourList
         ArrayList<TerrainTile> neighbourList = new ArrayList<>();
         for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) { //-1 as it also adds null neighbors for corner tiles.
+            for (int dy = -1; dy <= 1; dy++) { //-1, as it also adds null neighbors for corner tiles.
                 if (dx == 0 && dy == 0) continue; //the tile itself is not its own neighbour.
                 int nx = x + dx;
                 int ny = y + dy;

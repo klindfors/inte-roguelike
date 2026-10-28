@@ -59,8 +59,8 @@ public class LevelMap {
         }
         this.level = g;
         this.levelNr = levelNr;
-        this.width = 22;
-        this.height = 80;
+        this.width = g.length;
+        this.height = g[0].length;
         this.rand = new Random(); // eg non-essential while reading from a file
 
     }

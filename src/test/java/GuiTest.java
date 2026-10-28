@@ -24,9 +24,9 @@ public class GuiTest {
     }
 
     @Test
-    void mapHasSameHeight() throws IOException {
+    void mapHasSameWidth() throws IOException {
         String guiTxt = fromFile.renderGuiMap(); //read level 1 from file
-        assertEquals(new LevelMap(1, LEVEL1).getHeight(), guiTxt.lines().findFirst().orElse("").length()); //orElse method gives an optional string; this method will also run for empty maps
+        assertEquals(new LevelMap(1, LEVEL1).getWidth(), guiTxt.lines().findFirst().orElse("").length()); //orElse method gives an optional string; this method will also run for empty maps
 
     }
 
