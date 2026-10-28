@@ -64,7 +64,6 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: pop removes and returns the last char, terrain is kept")
     void popRestoresCell() throws IOException {
         Game game = level1Game();
         Gui gui = new Gui(game);
@@ -116,6 +115,7 @@ public class GuiTest {
     @Test
     @Disabled("todo: no cell may be null or empty")
     void noEmptyCells() {
+
 
     }
 

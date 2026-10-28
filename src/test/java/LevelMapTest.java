@@ -29,24 +29,19 @@ public class LevelMapTest {
     }
 
     @Test
-    //@Disabled("todo: at least two rooms in level map")
+    @Disabled("todo:all doors must have floor on both sides")
+    void allDoorsHaveFloor(){
+        //for all door coordinates, check that it has two floors as non-corner neighbours
+
+    }
+
+    @Test
+
     void atLeastTwoRooms() {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new LevelMap(1, 1, 455454353));
 
     }
 
-    @Test
-    @Disabled("todo:all doors must have floor on both sides")
-    void allDoorsHaveFloor(){
-
-    }
-
-    @Test
-    @Disabled("todo: map has (reachable) key if locked door exists. needs implementation of door!")
-    void ifLockedDoorMapHasKey(){
-
-    }
-    @Disabled("disable this test to enable maven build, until a level generation is implemented")
     @Test
     void isPassable() {
         assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Wall.class )));
@@ -56,8 +51,7 @@ public class LevelMapTest {
     }
 
     @Test
-    @Disabled("todo: no null tiles next to floor or door tiles; must be contained by walls/doors.")
-    void noNullNextToFloor() {
+     void noNullNextToFloor() {
         for (TerrainTile[] a : testLvl1.getLevel()) {
             for (TerrainTile t : a) {
                 if (t instanceof Floor || t instanceof Door) {
