@@ -10,7 +10,7 @@ public class NPC extends GameCharacter{
 
     private String dialogue;
     private List<Quiz> questions = new ArrayList<>();
-    private boolean hadQuestions;
+    private boolean hasQuestions;
 
     public NPC (int x, int y, String dialogue){
         super(x,y);
@@ -22,7 +22,7 @@ public class NPC extends GameCharacter{
         this.dialogue = dialogue;
         if (quiz != null){
             this.questions.add(quiz);
-            hadQuestions = true;
+            hasQuestions = true;
         }
 
     }
@@ -32,7 +32,7 @@ public class NPC extends GameCharacter{
         this.dialogue = dialogue;
         if (questions != null) {
             this.questions.addAll(questions);
-            hadQuestions = true;
+            hasQuestions = true;
         }
 
     }
@@ -65,7 +65,7 @@ public class NPC extends GameCharacter{
 
     public boolean isQuizCompleted(){
 
-        return hadQuestions && questions.isEmpty();
+        return hasQuestions && questions.isEmpty();
     }
 
 }

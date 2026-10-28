@@ -2,7 +2,7 @@ public class Quiz {
 
     private String question;
     private String [] answers;
-    private int correctAnswer;
+    private int correctAnswerIndex;
     private int level;
     private Difficulty difficulty;
 
@@ -17,7 +17,7 @@ public class Quiz {
         }
             this.question = question;
             this.answers = answers.clone();
-            this.correctAnswer = correctAnswer;
+            this.correctAnswerIndex = correctAnswer;
             this.difficulty = difficulty;
             this.level = 0;
 
@@ -27,7 +27,7 @@ public class Quiz {
         if (answerIndex < 0 || answerIndex >= answers.length){
             return false;
         }
-        if(answerIndex == correctAnswer){
+        if(answerIndex == correctAnswerIndex){
             level++;
             return true;
         }else{

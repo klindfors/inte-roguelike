@@ -8,10 +8,10 @@ import static org.mockito.Mockito.*;
 public class QuizSourceTest {
 
     @Test
-    void shouldReturnQuestionsMock(){
+    void shouldReturnQuestionsMock() {
         Quiz quiz = new Quiz(
                 "Vad börjar man med i TDD?",
-                new String[]{"Kodning","Testning", "Dokumentation"},
+                new String[]{"Kodning", "Testning", "Dokumentation"},
                 1,
                 Difficulty.EASY
 
@@ -22,7 +22,7 @@ public class QuizSourceTest {
 
         List<Quiz> result = quizSource.getQuizzesForLevel(1);
         assertEquals(1, result.size());
-        assertEquals("Vad börjar man med i TDD?",result.get(0).getQuestion());
+        assertEquals("Vad börjar man med i TDD?", result.get(0).getQuestion());
         assertEquals(Difficulty.EASY, result.get(0).getDifficulty());
 
         verify(quizSource).getQuizzesForLevel(1);
