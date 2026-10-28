@@ -4,4 +4,10 @@ public class Door extends TerrainTile{
     }
     //todo: states for open, closed door. symbol change + and / for open and closed? door traps randomisation? traps dealing damage?
 
+    public void openDoor(Item item){
+        if (item.isKey()){
+            this.setPassable(true);
+            this.setSymbol('/');
+        }
+    }
 }
