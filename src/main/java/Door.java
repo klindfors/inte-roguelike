@@ -6,7 +6,8 @@ public class Door extends TerrainTile{
 
     public void openDoor(Item item){
         if (item.isKey()){
-            setPassable(true);
+            this.setPassable(true);
+            this.setSymbol('/')
         }
     }
 }
