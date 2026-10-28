@@ -42,23 +42,26 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: render() returns the same text as the txt file")
-    void renderMatchesFile() {
-        assertEquals(fromFile.renderGuiMap(), fromFile.toString());
-
+    void renderMatchesFile() throws IOException {
+        List<String> rows = Files.readAllLines(LEVEL1);
+        assertEquals(String.join("\n", rows) + "\n", fromFile.renderGuiMap());
     }
 
     @Test
-    @Disabled("todo: push adds char to end of cell string, ie '.' becomes '.@'")
     void pushAddsToCell() {
-
-
+        assertThat(fromFile.getCell(6,6), is("."));
+        fromFile.push(6,6,'@');
+        assertThat(fromFile.getCell(6,6), is(".@"));
 
     }
 
     @Test
-    @Disabled("todo: getTop returns the last char of the cell")
     void topIsLastChar() {
+        assertThat(fromFile.getCell(6,6), is("."));
+        assertThat(fromFile.getTop(6,6), is('.'));
+        fromFile.push(6,6,'@');
+        assertThat(fromFile.getCell(6,6), is(".@"));
+        assertThat(fromFile.getTop(6,6), is('@'));
 
 
     }
@@ -92,8 +95,10 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: txt file with rows of different length throws IllegalArgumentException")
-    void unevenRowsThrow() {
+    void illegalRowLengthThrow() {
+        Path unevenMap = Path.of("src/main/resources/uneven.txt");
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class,() -> new Gui(unevenMap));
+
 
 
     }
@@ -112,12 +117,6 @@ public class GuiTest {
         assertThat(e.getCause(), is(instanceOf(IOException.class)));
     }
 
-    @Test
-    @Disabled("todo: no cell may be null or empty")
-    void noEmptyCells() {
-
-
-    }
 
     private static LevelMap levelFromFile(Path path) throws IOException {
         List<String> rows = Files.readAllLines(path);
