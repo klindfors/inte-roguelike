@@ -327,5 +327,63 @@ public class GameIntegrationTest {
         assertEquals(0, player.getY());
     }
 
+    @Test
+    void gameLoopShouldStopWhenPlayerDiesDuringAnAction() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = mock(PlayerGuiInteraction.class);
+
+        when(movement.tryMove(player, gui, 1, 0))
+                .thenAnswer(invocation -> {
+                    player.takePhysicalDamage(5);
+                    return true;
+                });
+
+        List<GameAction> actions = List.of(
+                GameAction.MOVE_RIGHT,
+                GameAction.MOVE_DOWN
+        );
+        var actionIterator = actions.iterator();
+
+        game.start();
+
+        game.runLoop(movement, gui, actionIterator);
+
+        assertEquals(GameState.LOST, game.getState());
+
+        verify(movement).tryMove(player, gui, 1, 0);
+        verify(movement, never()).tryMove(player, gui, 0, 1);
+
+        assertTrue(actionIterator.hasNext());
+        assertEquals(GameAction.MOVE_DOWN, actionIterator.next());
+    }
+
+    @Test
+    void gameLoopShouldBlockFurtherMovementAfterBreakdown() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = mock(PlayerGuiInteraction.class);
+
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+
+        when(movement.tryMove(player, gui, 1, 0))
+                .thenAnswer(invocation -> {
+                    player.takeMentalDamage(5);
+                    return true;
+                });
+
+        List<GameAction> actions = List.of(
+                GameAction.MOVE_RIGHT,
+                GameAction.MOVE_DOWN
+        );
+
+        game.start();
+
+        game.runLoop(movement, gui, actions.iterator());
+
+        assertEquals(GameState.FROZEN, game.getState());
+        verify(movement).tryMove(player, gui, 1, 0);
+        verify(movement, never()).tryMove(player, gui, 0, 1);
+        assertEquals(1, player.numOfItemsInInv());
+    }
+
 
 }
