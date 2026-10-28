@@ -18,6 +18,7 @@ public class LevelMapTest {
     LevelMap testLvl1 = new LevelMap(1, 3, 67);
     LevelMap pathLvl1 = new LevelMap(1, Path.of("src/main/resources/level1.txt"));
 
+
     public LevelMapTest() throws IOException {
     }
 
@@ -58,6 +59,16 @@ public class LevelMapTest {
         //additionally needs to check if an NPC is situated on the coordinates; possibly better suited in another test class, ie GUI or Game
     }
 
+    @Test
+    void fillKeepsExistingTiles() { //this test raises branch coverage to 100 % for the levelmap constructor; test that tiles are not overwritten when filling with walls.
+        TerrainTile[][] grid = new TerrainTile[3][3];
+        grid[1][1] = new Floor(1, 1);
+        LevelMap.fillRestWithWalls(grid);
+        assertThat(grid[1][1], is(instanceOf(Floor.class)));
+        assertThat(grid[0][0], is(instanceOf(Wall.class)));
+    }
+
+
     @ParameterizedTest
     @ValueSource(strings = {"level1.txt", "level2.txt", "leveltiny.txt"})
      void noNullNextToFloor(String txtFile) throws IOException {
@@ -87,6 +98,16 @@ public class LevelMapTest {
             }
         }
         return neighbourList.toArray(new TerrainTile[0]); //convert the list to an array of the list size
+    }
+
+
+    //exception checks
+
+    @Test
+    void unknownSymbolThrows() {
+        Path strange = Path.of("src/main/resources/strangemap.txt");
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> new LevelMap(1, strange));
+        assertThat(e.getMessage(), containsString("54,2"));
     }
 
 }

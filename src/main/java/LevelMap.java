@@ -33,14 +33,20 @@ public class LevelMap {
         //try to place the rooms w helper method
         //todo: room connection, add rooms to level
         //fill the rest of lvl with walls
-        for(int r = 0; r < width; r ++){
+        fillRestWithWalls(level);
 
-            for(int i= 0; i < height; i++){
+    }
+
+    protected static void fillRestWithWalls(TerrainTile[][] level){
+
+        for(int r = 0; r < level.length; r ++){
+            for(int i= 0; i < level[r].length; i++){
                 if (level[r][i] == null){
                     level[r][i] = new Wall(r,i);
                 }
             }
         }
+
     }
 
     public LevelMap(int levelNr, Path path) throws IOException {//constructor with reading from a txt file, surpass implementing random gen of maps
