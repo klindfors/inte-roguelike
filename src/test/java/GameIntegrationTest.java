@@ -178,8 +178,8 @@ public class GameIntegrationTest {
         game.handleMove(movement, gui, 1, 0);
 
         // Assert
-        assertEquals(1, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(1, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
     }
 
     @Test
@@ -202,8 +202,8 @@ public class GameIntegrationTest {
         game.handleMove(movement, gui, 1, 0);
 
         // Assert
-        assertEquals(0, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(0, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
         assertEquals(GameState.FROZEN, game.getState());
     }
 
@@ -225,8 +225,8 @@ public class GameIntegrationTest {
 
         // Assert
         assertEquals(GameState.FROZEN, game.getState());
-        assertEquals(0, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(0, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
     }
 
     @Test
@@ -251,8 +251,8 @@ public class GameIntegrationTest {
         game.runLoop(movement, gui, actions.iterator());
 
         // Assert
-        assertEquals(1, player.getX());
-        assertEquals(1, player.getY());
+        assertEquals(1, player.getxCoordinate());
+        assertEquals(1, player.getyCoordinate());
     }
 
     @Test
@@ -272,8 +272,8 @@ public class GameIntegrationTest {
 
         // Assert
         assertEquals(GameState.LOST, game.getState());
-        assertEquals(0, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(0, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
     }
 
     @Test
@@ -329,8 +329,8 @@ public class GameIntegrationTest {
 
         assertEquals(GameState.LOST, game.getState());
         assertTrue(actionIterator.hasNext());
-        assertEquals(0, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(0, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
     }
 
     @Test
@@ -419,8 +419,8 @@ public class GameIntegrationTest {
         assertEquals(GameState.RUNNING, game.getState());
         assertEquals(3, player.getMentalHealth());
         assertFalse(player.hasItem(coffee));
-        assertEquals(1, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(1, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
     }
 
     @Test
@@ -452,8 +452,8 @@ public class GameIntegrationTest {
         assertEquals(GameState.RUNNING, game.getState());
         assertEquals(3, player.getMentalHealth());
         assertFalse(player.hasItem(coffee));
-        assertEquals(1, player.getX());
-        assertEquals(0, player.getY());
+        assertEquals(1, player.getxCoordinate());
+        assertEquals(0, player.getyCoordinate());
     }
 
     @Test
@@ -543,8 +543,8 @@ public class GameIntegrationTest {
 
         game.runLoop(movement, gui, actions.iterator());
 
-        assertEquals(0, player.getX());
-        assertEquals(1, player.getY());
+        assertEquals(0, player.getxCoordinate());
+        assertEquals(1, player.getyCoordinate());
         assertEquals(GameState.RUNNING, game.getState());
     }
 

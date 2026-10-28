@@ -57,7 +57,7 @@ public class Gui {
         //takes in a started Game, builds the map from its current level and places the player on it.
         this(levelOf(game));
         Player p = game.getPlayer();
-        if (!placePlayer(p.getX(), p.getY())) throw new IllegalStateException("Player cannot start at " + p.getX() + "," + p.getY());
+        if (!placePlayer(p.getxCoordinate(), p.getyCoordinate())) throw new IllegalStateException("Player cannot start at " + p.getxCoordinate() + "," + p.getyCoordinate());
     }
 
     public boolean isLegalStart(int x, int y){ //check that the starting pos of a player is legal; it must be a floor and the room cannot have a staircase..

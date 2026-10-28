@@ -74,8 +74,8 @@ public class GuiTest {
         int y = 6;
         assertThat(gui.getCell(x , y), is("."));
         gui.placePlayer(66, 6);
-        int xPlayer = game.getPlayer().getX();
-        int yPlayer = game.getPlayer().getY();
+        int xPlayer = game.getPlayer().getxCoordinate();
+        int yPlayer = game.getPlayer().getyCoordinate();
         assertThat(gui.getCell(xPlayer, yPlayer), is(".@"));
         assertEquals(gui.pop(xPlayer,yPlayer), ('@')); //pops the correct char from the string
         assertThat(gui.getCell(xPlayer , yPlayer), is("."));
@@ -160,8 +160,8 @@ public class GuiTest {
         Game game = level1Game();
         Gui gui = new Gui(game);
         gui.placePlayer(66, 6);
-        int x = game.getPlayer().getX();
-        int y = game.getPlayer().getY();
+        int x = game.getPlayer().getxCoordinate();
+        int y = game.getPlayer().getyCoordinate();
         assertThat(step(game, gui, 1, 0), is(true));
         assertThat(gui.getCell(x + 1, y), is(".@"));
         assertThat(gui.getCell(x, y), is("."));
@@ -174,7 +174,7 @@ public class GuiTest {
         Gui gui = new Gui(game);
         gui.placePlayer(5,5);
         while (step(game, gui, -1, 0)) { }
-        assertThat(game.getPlayer().getX(), is(5));
+        assertThat(game.getPlayer().getxCoordinate(), is(5));
     }
 
     @Test
@@ -183,8 +183,8 @@ public class GuiTest {
         Gui gui = new Gui(game);
         step(game, gui, 0, 1);
         while (step(game, gui, 1, 0)) { }
-        assertThat(game.getPlayer().getX(), is(10));
-        assertThat(game.getPlayer().getY(), is(5));
+        assertThat(game.getPlayer().getxCoordinate(), is(10));
+        assertThat(game.getPlayer().getyCoordinate(), is(5));
     }
 
     @Test

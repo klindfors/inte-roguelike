@@ -1,32 +1,37 @@
 public abstract class GameCharacter {
-    private int x;
-    private int y;
+    private int xCoordinate;
+    private int yCoordinate;
     private int mentalHealth;
     private int physicalHealth;
     private int maxPhysicalHealth;
     private int maxMentalHealth;
+    private static final int DEFAULT_PHYSICAL_HEALTH = 5;
+    private static final int DEFAULT_MENTAL_HEALTH = 5;
+    private static final int MINIMAL_HEALTH = 0;
+
+
 
     public GameCharacter(int x, int y){
-        this(x, y, 5, 5);
+        this(x, y, DEFAULT_PHYSICAL_HEALTH, DEFAULT_MENTAL_HEALTH);
     }
 
     public GameCharacter(int x, int y, int maxPhysicalHealth, int maxMentalHealth){
         validateNonNegative(maxPhysicalHealth);
         validateNonNegative(maxMentalHealth);
-        this.x = x;
-        this.y = y;
+        this.xCoordinate = x;
+        this.yCoordinate = y;
         this.physicalHealth = maxPhysicalHealth;
         this.mentalHealth = maxMentalHealth;
         this.maxPhysicalHealth = maxPhysicalHealth;
         this.maxMentalHealth = maxMentalHealth;
     }
 
-    public int getX(){
-        return x;
+    public int getxCoordinate(){
+        return xCoordinate;
     }
 
-    public int getY(){
-        return y;
+    public int getyCoordinate(){
+        return yCoordinate;
     }
 
     public int getMentalHealth() {
@@ -47,7 +52,7 @@ public abstract class GameCharacter {
 
     public void takePhysicalDamage(int amount){
         validateNonNegative(amount);
-        physicalHealth = Math.max(0, physicalHealth - amount);
+        physicalHealth = Math.max(MINIMAL_HEALTH, physicalHealth - amount);
     }
 
     public void restorePhysicalHealth(int amount) {
@@ -57,7 +62,7 @@ public abstract class GameCharacter {
 
     public void takeMentalDamage(int amount) {
         validateNonNegative(amount);
-        mentalHealth = Math.max(0, mentalHealth - amount);
+        mentalHealth = Math.max(MINIMAL_HEALTH, mentalHealth - amount);
     }
 
     public void restoreMentalHealth(int amount) {
@@ -72,8 +77,8 @@ public abstract class GameCharacter {
     }
 
     public void move(int dx, int dy) {
-        x += dx;
-        y += dy;
+        xCoordinate += dx;
+        yCoordinate += dy;
     }
 
 

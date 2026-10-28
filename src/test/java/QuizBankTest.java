@@ -176,20 +176,19 @@ public class QuizBankTest {
     }
 
 
-
     @ParameterizedTest
     @CsvSource({
             "1, EASY",
             "2, MEDIUM",
             "3, HARD"
     })
-    void shouldReturnOnlyRequestedDifficulty(int levelNumber, Difficulty difficulty){
+    void shouldReturnOnlyRequestedDifficulty(int levelNumber, Difficulty difficulty) {
         List<Quiz> quizzes = QuizBank.createQuizzes();
         List<Quiz> result = QuizBank.getQuizzesForLevel(quizzes, levelNumber);
         assertFalse(result.isEmpty());
         assertTrue(
                 result.stream().allMatch(
-                        q->q.getDifficulty() == difficulty
+                        q -> q.getDifficulty() == difficulty
 
 
                 )
@@ -197,13 +196,13 @@ public class QuizBankTest {
     }
 
     @Test
-    void ShouldRejectCsvWhenMissingColumns(){
+    void ShouldRejectCsvWhenMissingColumns() {
         String csvFile = """
                 question, answers, correctAnswer, difficulty
                 Vad är TDD?, Testning;Kodning""";
         assertThrows(
                 IllegalArgumentException.class,
-                ()-> QuizBank.loadQuizzes(new StringReader(csvFile))
+                () -> QuizBank.loadQuizzes(new StringReader(csvFile))
         );
     }
 

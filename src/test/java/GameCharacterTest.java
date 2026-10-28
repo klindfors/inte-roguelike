@@ -8,8 +8,8 @@ class GameCharacterTest {
     @Test
     void constructorSetsInitialPosition() {
         GameCharacter character = new TestCharacter(2, 3);
-        assertEquals(2, character.getX());
-        assertEquals(3, character.getY());
+        assertEquals(2, character.getxCoordinate());
+        assertEquals(3, character.getyCoordinate());
     }
 
     @Test
@@ -156,32 +156,32 @@ class GameCharacterTest {
     void movingRightUpdatesPosition() {
         GameCharacter character = new TestCharacter(2, 3);
         character.move(1, 0);
-        assertEquals(3, character.getX());
-        assertEquals(3, character.getY());
+        assertEquals(3, character.getxCoordinate());
+        assertEquals(3, character.getyCoordinate());
     }
 
     @Test
     void movingLeftUpdatesPosition() {
         GameCharacter character = new TestCharacter(2, 3);
         character.move(-1, 0);
-        assertEquals(1, character.getX());
-        assertEquals(3, character.getY());
+        assertEquals(1, character.getxCoordinate());
+        assertEquals(3, character.getyCoordinate());
     }
 
     @Test
     void movingUpUpdatesPosition() {
         GameCharacter character = new TestCharacter(2, 3);
         character.move(0, -1);
-        assertEquals(2, character.getX());
-        assertEquals(2, character.getY());
+        assertEquals(2, character.getxCoordinate());
+        assertEquals(2, character.getyCoordinate());
     }
 
     @Test
     void movingDownUpdatesPosition() {
         GameCharacter character = new TestCharacter(2, 3);
         character.move(0, 1);
-        assertEquals(2, character.getX());
-        assertEquals(4, character.getY());
+        assertEquals(2, character.getxCoordinate());
+        assertEquals(4, character.getyCoordinate());
     }
 
     private static class TestCharacter extends GameCharacter {

@@ -2,8 +2,8 @@ public class PlayerGuiInteraction {
 
         public boolean tryMove(Player player, Gui gui, int dx, int dy) {
 
-            int oldX = player.getX();
-            int oldY = player.getY();
+            int oldX = player.getxCoordinate();
+            int oldY = player.getyCoordinate();
             int newX = oldX + dx;
             int newY = oldY + dy;
 
