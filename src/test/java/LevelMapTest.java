@@ -19,6 +19,13 @@ public class LevelMapTest {
     public LevelMapTest() throws IOException {
     }
 
+
+    @Test
+    @Disabled("what happens when an IOException is thrown? /Henrik B")
+    void brokenIO(){
+
+    }
+
     //tests relating to levelmap generation, and from file
     @Test
     @Disabled("todo: all rooms connected to main map")
@@ -36,7 +43,6 @@ public class LevelMapTest {
     }
 
     @Test
-
     void atLeastTwoRooms() {
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> new LevelMap(1, 1, 455454353));
 
@@ -44,22 +50,26 @@ public class LevelMapTest {
 
     @Test
     void isPassable() {
-        assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Wall.class )));
+        assertThat(pathLvl1.getTile(7,6).isPassable(), is(true));
         //also needs to check that tile is not a closed door; needs door implementation to write proper test.
-        assertThat(testLvl1.getTile(2,3).getClass(), not(instanceOf(Door.class))); //now false for all doors.
+        assertThat(pathLvl1.getTile(2,3).isPassable(), is(false)); //now false for all doors.
         //additionally needs to check if an NPC is situated on the coordinates; possibly better suited in another test class, ie GUI or Game
     }
 
     @Test
      void noNullNextToFloor() {
         for (TerrainTile[] a : testLvl1.getLevel()) {
+        int checked = 0;
+        for (TerrainTile[] a : grid) {
             for (TerrainTile t : a) {
                 if (t instanceof Floor || t instanceof Door) {
-                    assertThat(neighbours(testLvl1.getLevel(), t.getX(), t.getY()), is(notNullValue()));
 
+                    checked++;
+                    assertThat("tile " + t.getX() + "," + t.getY(), neighbours(grid, t.getX(), t.getY()), not(hasItemInArray(nullValue())));
                 }
             }
         }
+        assertThat(checked, greaterThan(2));
     }
 
     private TerrainTile[] neighbours(TerrainTile[][] grid, int x, int y) {
