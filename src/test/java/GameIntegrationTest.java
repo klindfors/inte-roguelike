@@ -385,5 +385,66 @@ public class GameIntegrationTest {
         assertEquals(1, player.numOfItemsInInv());
     }
 
+    @Test
+    void gameLoopShouldAllowRecoveryThenMovement() {
+        Gui gui = mock(Gui.class);
+        when(gui.getCell(1, 0)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        player.pickUp(coffee);
+
+        game.start();
+        player.takeMentalDamage(5);
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        List<GameAction> actions = List.of(
+                GameAction.USE_MENTAL_ITEM,
+                GameAction.MOVE_RIGHT
+        );
+
+        game.runLoop(movement, gui, actions.iterator());
+
+        assertEquals(GameState.RUNNING, game.getState());
+        assertEquals(3, player.getMentalHealth());
+        assertFalse(player.hasItem(coffee));
+        assertEquals(1, player.getX());
+        assertEquals(0, player.getY());
+    }
+
+    @Test
+    void gameLoopShouldBlockMovementUntilPlayerChoosesRecovery() {
+        Gui gui = mock(Gui.class);
+        when(gui.getCell(1, 0)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+        player.pickUp(coffee);
+
+        game.start();
+        player.takeMentalDamage(5);
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        List<GameAction> actions = List.of(
+                GameAction.MOVE_RIGHT,
+                GameAction.USE_MENTAL_ITEM,
+                GameAction.MOVE_RIGHT
+        );
+
+        game.runLoop(movement, gui, actions.iterator());
+
+        assertEquals(GameState.RUNNING, game.getState());
+        assertEquals(3, player.getMentalHealth());
+        assertFalse(player.hasItem(coffee));
+        assertEquals(1, player.getX());
+        assertEquals(0, player.getY());
+    }
+
 
 }

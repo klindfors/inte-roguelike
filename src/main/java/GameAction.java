@@ -4,5 +4,6 @@ public enum GameAction {
     MOVE_LEFT,
     MOVE_RIGHT,
     INTERACT,
-    OPEN_INVENTORY
+    OPEN_INVENTORY,
+    USE_MENTAL_ITEM
 }
