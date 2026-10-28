@@ -161,5 +161,171 @@ public class GameIntegrationTest {
         }
     }
 
+    @Test
+    void movingRightDuringRunningGameMovesPlayer() {
+        // Arrange
+        Gui gui = mock(Gui.class);
+        when(gui.getCell(1, 0)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+        game.start();
+
+        // Act
+        game.handleMove(movement, gui, 1, 0);
+
+        // Assert
+        assertEquals(1, player.getX());
+        assertEquals(0, player.getY());
+    }
+
+    @Test
+    void frozenPlayerShouldNotMove() {
+        // Arrange
+        Gui gui = mock(Gui.class);
+        when(gui.getCell(1, 0)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        game.start();
+
+        player.takeMentalDamage(5);
+        game.updateState();
+
+        assertEquals(GameState.FROZEN, game.getState());
+
+        // Act
+        game.handleMove(movement, gui, 1, 0);
+
+        // Assert
+        assertEquals(0, player.getX());
+        assertEquals(0, player.getY());
+        assertEquals(GameState.FROZEN, game.getState());
+    }
+
+    @Test
+    void playerShouldNotMoveWhenBreakdownHasNotBeenProcessedYet() {
+        // Arrange
+        Gui gui = mock(Gui.class);
+        when(gui.getCell(1, 0)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+        game.start();
+
+        player.takeMentalDamage(5);
+
+        // Act
+        game.handleMove(movement, gui, 1, 0);
+
+        // Assert
+        assertEquals(GameState.FROZEN, game.getState());
+        assertEquals(0, player.getX());
+        assertEquals(0, player.getY());
+    }
+
+    @Test
+    void gameLoopShouldProcessMultipleMovementActions() {
+        // Arrange
+        Gui gui = mock(Gui.class);
+        when(gui.getCell(1, 0)).thenReturn(".");
+        when(gui.getCell(1, 1)).thenReturn(".");
+
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        List<GameAction> actions = List.of(
+                GameAction.MOVE_RIGHT,
+                GameAction.MOVE_DOWN
+        );
+
+        game.start();
+
+        // Act
+        game.runLoop(movement, gui, actions.iterator());
+
+        // Assert
+        assertEquals(1, player.getX());
+        assertEquals(1, player.getY());
+    }
+
+    @Test
+    void gameLoopShouldNotMovePlayerAfterGameIsLost() {
+        // Arrange
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        List<GameAction> actions = List.of(GameAction.MOVE_RIGHT);
+
+        game.start();
+        player.takePhysicalDamage(5);
+        game.updateState();
+
+        // Act
+        game.runLoop(movement, gui, actions.iterator());
+
+        // Assert
+        assertEquals(GameState.LOST, game.getState());
+        assertEquals(0, player.getX());
+        assertEquals(0, player.getY());
+    }
+
+    @Test
+    void gameLoopShouldNotConsumeActionsAfterGameIsLost() {
+        // Arrange
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        List<GameAction> actions = List.of(GameAction.MOVE_RIGHT);
+        var actionIterator = actions.iterator();
+
+        game.start();
+        player.takePhysicalDamage(5);
+        game.updateState();
+
+        // Act
+        game.runLoop(movement, gui, actionIterator);
+
+        // Assert
+        assertTrue(actionIterator.hasNext());
+    }
+
+    @Test
+    void gameLoopShouldNotCheckForInputAfterGameIsLost() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        java.util.Iterator<GameAction> actions =
+                mock(java.util.Iterator.class);
+
+        game.start();
+        player.takePhysicalDamage(5);
+        game.updateState();
+
+        game.runLoop(movement, gui, actions);
+
+        verifyNoInteractions(actions);
+    }
+
+    @Test
+    void gameLoopShouldDetectDeathBeforeConsumingAction() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = new PlayerGuiInteraction();
+
+        List<GameAction> actions = List.of(GameAction.MOVE_RIGHT);
+        var actionIterator = actions.iterator();
+
+        game.start();
+        player.takePhysicalDamage(5);
+        // Deliberately don't call updateState().
+
+        game.runLoop(movement, gui, actionIterator);
+
+        assertEquals(GameState.LOST, game.getState());
+        assertTrue(actionIterator.hasNext());
+        assertEquals(0, player.getX());
+        assertEquals(0, player.getY());
+    }
+
 
 }
