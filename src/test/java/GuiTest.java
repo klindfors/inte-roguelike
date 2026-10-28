@@ -69,12 +69,15 @@ public class GuiTest {
     void popRestoresCell() throws IOException {
         Game game = level1Game();
         Gui gui = new Gui(game);
-        gui.placePlayer(66, 6);
-        int x = game.getPlayer().getX();
-        int y = game.getPlayer().getY();
-        assertThat(gui.getCell(x, y), is(".@"));
-        assertEquals(gui.pop(x,y), ('@')); //pops the correct char from the string
+        int x = 66;
+        int y = 6;
         assertThat(gui.getCell(x , y), is("."));
+        gui.placePlayer(66, 6);
+        int xPlayer = game.getPlayer().getX();
+        int yPlayer = game.getPlayer().getY();
+        assertThat(gui.getCell(xPlayer, yPlayer), is(".@"));
+        assertEquals(gui.pop(xPlayer,yPlayer), ('@')); //pops the correct char from the string
+        assertThat(gui.getCell(xPlayer , yPlayer), is("."));
 
 
     }
