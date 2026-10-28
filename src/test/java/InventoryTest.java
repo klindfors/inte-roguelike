@@ -2,14 +2,25 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 
 public class InventoryTest {
 
-    @Test 
-    void usingMentalConsumableWorks(){
-        Player player = new Player(0, 0);
-        Consumable coffee = new Consumable(ConsumableType.COFFEE);
+    private Player player;
+    private Consumable coffee;
+    private Consumable sandwich;
+    private Key key;
+
+    @BeforeEach
+    void setUp() {
+        player = new Player(2, 3);
+        coffee = new Consumable(ConsumableType.COFFEE);
+        sandwich = new Consumable(ConsumableType.SANDWICH);
+        key = new Key();
+    }
+
+    @Test
+    void usingMentalConsumableWorks() {
         player.pickUp(coffee);
         player.takeMentalDamage(4);
         player.useMentalConsumable();
@@ -18,10 +29,8 @@ public class InventoryTest {
         assertFalse(player.hasItem(coffee));
     }
 
-    @Test 
-    void usingPhysicalConsumableWorks(){
-        Player player = new Player(0, 0);
-        Consumable sandwich = new Consumable(ConsumableType.SANDWICH);
+    @Test
+    void usingPhysicalConsumableWorks() {
         player.pickUp(sandwich);
         player.takePhysicalDamage(4);
         player.usePhysicalConsumable();
@@ -30,26 +39,21 @@ public class InventoryTest {
         assertFalse(player.hasItem(sandwich));
     }
 
-    @Test 
-    void cantAddMoreThanFiveItems(){
-        Player player = new Player(0, 0);
-        player.pickUp(new Consumable(ConsumableType.COFFEE));        
+    @Test
+    void cantAddMoreThanFiveItems() {
         player.pickUp(new Consumable(ConsumableType.COFFEE));
         player.pickUp(new Consumable(ConsumableType.COFFEE));
         player.pickUp(new Consumable(ConsumableType.COFFEE));
         player.pickUp(new Consumable(ConsumableType.COFFEE));
         player.pickUp(new Consumable(ConsumableType.COFFEE));
-        
+        player.pickUp(new Consumable(ConsumableType.COFFEE));
+
         assertEquals(player.numOfItemsInInv(), 5);
-        
+
     }
 
-    @Test 
-    void canDifferentiateBetweenPhysicalAndMentalConsumable(){
-        Player player = new Player(0, 0);
-        Consumable coffee = new Consumable(ConsumableType.COFFEE);
-        Consumable sandwich = new Consumable(ConsumableType.SANDWICH);
-
+    @Test
+    void canDifferentiateBetweenPhysicalAndMentalConsumable() {
         player.pickUp(coffee);
         player.pickUp(sandwich);
         player.usePhysicalConsumable();
@@ -59,25 +63,18 @@ public class InventoryTest {
     }
 
     @Test
-    void canAddDifferntTypesOfItem(){
-        Player player = new Player(0, 0);
-        Consumable coffee = new Consumable(ConsumableType.COFFEE);
-        Key key = new Key();
-
+    void canAddDifferntTypesOfItem() {
         player.pickUp(coffee);
         player.pickUp(key);
 
         assertEquals(player.numOfItemsInInv(), 2);
     }
 
-    @Test 
-    void returnsTrueWhenConsumedItem(){
-        Player player = new Player(0, 0);
-        Consumable coffee = new Consumable(ConsumableType.COFFEE);
-
+    @Test
+    void returnsTrueWhenConsumedItem() {
         player.pickUp(coffee);
         player.takeMentalDamage(4);
         assertTrue(player.useMentalConsumable());
     }
-    
+
 }
