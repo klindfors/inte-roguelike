@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.internal.stubbing.answers.ThrowsException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -56,13 +58,14 @@ public class LevelMapTest {
         //additionally needs to check if an NPC is situated on the coordinates; possibly better suited in another test class, ie GUI or Game
     }
 
-    @Test
-     void noNullNextToFloor() {
-        for (TerrainTile[] a : testLvl1.getLevel()) {
+    @ParameterizedTest
+    @ValueSource(strings = {"level1.txt", "level2.txt", "leveltiny.txt"})
+     void noNullNextToFloor(String txtFile) throws IOException {
+        TerrainTile[][] grid = new LevelMap(1, Path.of("src/main/resources/" + txtFile)).getLevel();
         int checked = 0;
         for (TerrainTile[] a : grid) {
             for (TerrainTile t : a) {
-                if (t instanceof Floor || t instanceof Door) {
+                if (t instanceof Floor || t instanceof Door || t instanceof Staircase) {
 
                     checked++;
                     assertThat("tile " + t.getX() + "," + t.getY(), neighbours(grid, t.getX(), t.getY()), not(hasItemInArray(nullValue())));
