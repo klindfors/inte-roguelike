@@ -567,5 +567,23 @@ public class GameIntegrationTest {
         verifyNoMoreInteractions(movement);
     }
 
+    @Test
+    void gameLoopShouldNotCheckForInputBeforeGameStarts() {
+        Gui gui = mock(Gui.class);
+        PlayerGuiInteraction movement = mock(PlayerGuiInteraction.class);
+
+        java.util.Iterator<GameAction> actions =
+                mock(java.util.Iterator.class);
+
+        assertEquals(GameState.NOT_STARTED, game.getState());
+
+        game.runLoop(movement, gui, actions);
+
+        assertEquals(GameState.NOT_STARTED, game.getState());
+        verifyNoInteractions(actions);
+        verifyNoInteractions(movement);
+        verifyNoInteractions(factory);
+    }
+
 
 }

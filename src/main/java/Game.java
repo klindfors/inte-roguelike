@@ -95,8 +95,8 @@ public class Game {
 
         updateState();
 
-        while (gameState != GameState.WON
-                && gameState != GameState.LOST
+        while ((gameState == GameState.RUNNING
+                || gameState == GameState.FROZEN)
                 && actions.hasNext()) {
 
             GameAction action = actions.next();
