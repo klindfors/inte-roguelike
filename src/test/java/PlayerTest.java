@@ -61,4 +61,12 @@ public class PlayerTest {
         assertEquals(4, player.getPhysicalHealth());
         assertFalse(player.isDead());
     }
+
+    @Test
+    void restorePhysicalHealthRejectsNegativeAmount(){
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> player.restorePhysicalHealth(-1)
+        );
+    }
 }
