@@ -15,7 +15,7 @@ public class PlayerTest {
     void mentalBreakdownWhenMentalHealthIsZero() {
         Player player = new Player(2, 3);
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
     }
 
     // Tillståndsbaserad testning: kontrollerar övergången
@@ -24,9 +24,9 @@ public class PlayerTest {
     void mentalBreakdownEndsAfterRecovery() {
         Player player = new Player(2, 3);
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
         player.restoreMentalHealth(2);
-        assertFalse(player.isMentalBreakdown());
+        assertFalse(player.hasMentalBreakdown());
     }
 
     // Tillståndsbaserad testning: kontrollerar att spelaren dör
@@ -44,7 +44,7 @@ public class PlayerTest {
     void playerIsAliveDuringMentalBreakdown() {
         Player player = new Player(2, 3);
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
         assertFalse(player.isDead());
     }
 

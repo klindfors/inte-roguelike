@@ -388,7 +388,7 @@ public class GameIntegrationTest {
         assertEquals(GameState.FROZEN, game.getState());
         verify(movement).tryMove(player, gui, 1, 0);
         verify(movement, never()).tryMove(player, gui, 0, 1);
-        assertEquals(1, player.numOfItemsInInv());
+        assertEquals(1, player.getNumberOfItemsInInventory());
     }
 
     @Test
