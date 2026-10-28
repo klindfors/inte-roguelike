@@ -24,6 +24,10 @@ public class Game {
         gameState = GameState.RUNNING;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public GameState getState() {
         return gameState;
     }
@@ -72,8 +76,46 @@ public class Game {
         return currentLevel;
     }
 
-    public Player getPlayer() {
-        return player;
+    public void handleMove(
+            PlayerGuiInteraction movement, Gui gui,
+            int changeInX, int changeInY) {
+
+        updateState();
+
+        if (gameState == GameState.RUNNING) {
+            movement.tryMove(player, gui, changeInX, changeInY);
+            updateState();
+        }
+    }
+
+    public void runLoop(
+            PlayerGuiInteraction movement,
+            Gui gui,
+            java.util.Iterator<GameAction> actions) {
+
+        updateState();
+
+        while ((gameState == GameState.RUNNING
+                || gameState == GameState.FROZEN)
+                && actions.hasNext()) {
+
+            GameAction action = actions.next();
+
+            switch (action) {
+                case MOVE_UP -> handleMove(movement, gui, 0, -1);
+                case MOVE_DOWN -> handleMove(movement, gui, 0, 1);
+                case MOVE_LEFT -> handleMove(movement, gui, -1, 0);
+                case MOVE_RIGHT -> handleMove(movement, gui, 1, 0);
+
+                case INTERACT, OPEN_INVENTORY -> {
+                    // Not connected yet.
+                }
+
+                case USE_MENTAL_ITEM -> player.useMentalConsumable();
+            }
+
+            updateState();
+        }
     }
 
 }
