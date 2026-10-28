@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class GuiTest {
@@ -23,10 +24,12 @@ public class GuiTest {
     }
 
     @Test
-    @Disabled("todo: gui from LevelMap has same dimensions as the LevelMap")
-    void mapHasSameSize() {
+    void mapHasSameWidth() throws IOException {
+        String guiTxt = fromFile.renderGuiMap(); //read level 1 from file
+        assertEquals(new LevelMap(1, LEVEL1).getWidth(), guiTxt.lines().findFirst().orElse("").length()); //orElse method gives an optional string; this method will also run for empty maps
 
     }
+
 
     @Test
         void cellsMatchFile() throws IOException {
@@ -41,6 +44,7 @@ public class GuiTest {
     @Test
     @Disabled("todo: render() returns the same text as the txt file")
     void renderMatchesFile() {
+        assertEquals(fromFile.renderGuiMap(), fromFile.toString());
 
     }
 
@@ -49,41 +53,55 @@ public class GuiTest {
     void pushAddsToCell() {
 
 
+
     }
 
     @Test
     @Disabled("todo: getTop returns the last char of the cell")
     void topIsLastChar() {
 
-    }
-
-    @Test
-    @Disabled("todo: pop removes and returns the last char, terrain is kept")
-    void popRestoresCell() {
 
     }
 
     @Test
-    @Disabled("todo: pop on a terrain-only cell throws IllegalStateException")
+    void popRestoresCell() throws IOException {
+        Game game = level1Game();
+        Gui gui = new Gui(game);
+        int x = 66;
+        int y = 6;
+        assertThat(gui.getCell(x , y), is("."));
+        gui.placePlayer(66, 6);
+        int xPlayer = game.getPlayer().getX();
+        int yPlayer = game.getPlayer().getY();
+        assertThat(gui.getCell(xPlayer, yPlayer), is(".@"));
+        assertEquals(gui.pop(xPlayer,yPlayer), ('@')); //pops the correct char from the string
+        assertThat(gui.getCell(xPlayer , yPlayer), is("."));
+
+
+    }
+
+    @Test
     void cannotPopBaseTerrain() {
-
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(level1Game()).pop(2,0));
     }
 
     @Test
-    @Disabled("todo: txt file with unknown symbol throws IllegalArgumentException")
     void unknownSymbolThrows() {
-
+        Path strangemap = Path.of("src/main/resources/strangemap.txt");
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Gui(strangemap));
     }
 
     @Test
     @Disabled("todo: txt file with rows of different length throws IllegalArgumentException")
     void unevenRowsThrow() {
 
+
     }
 
     @Test
-    @Disabled("todo: empty txt file throws IllegalArgumentException")
     void emptyFileThrows() {
+        Path empty = Path.of("src/main/resources/empty.txt");
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Gui(empty));
 
     }
 
@@ -97,6 +115,7 @@ public class GuiTest {
     @Test
     @Disabled("todo: no cell may be null or empty")
     void noEmptyCells() {
+
 
     }
 
@@ -136,7 +155,6 @@ public class GuiTest {
         int[] s = new Gui(lvl).findStart();
         return startedGame(lvl, s[0], s[1]);
     }
-
 
     @Test
     void level1PlayerMovesOnFloor() throws IOException {
