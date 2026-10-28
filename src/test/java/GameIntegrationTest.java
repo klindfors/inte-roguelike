@@ -93,7 +93,7 @@ public class GameIntegrationTest {
     }
 
     @Test
-    void wrongAnswersWithoutRecoveryItemShouldLoseGame() {
+    void wrongAnswersWithoutRecoveryItemShouldFreezeThenLoseGame() {
         NPC npc = new NPC(1, 1, "Answer the question", createQuestion());
         game.start();
 
@@ -101,6 +101,10 @@ public class GameIntegrationTest {
 
         assertEquals(0, player.getMentalHealth());
         assertFalse(npc.isQuizCompleted());
+        assertEquals(GameState.FROZEN, game.getState());
+
+        game.updateState();
+
         assertEquals(GameState.LOST, game.getState());
     }
 
