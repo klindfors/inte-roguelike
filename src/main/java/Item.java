@@ -1,6 +1,8 @@
 public abstract class Item {
     // Collection Inventory - Handles pick-up
     // Item should be empty? Abstract class. Consume?
+
+    public static final char symbol = '%';
     public abstract void use(Player player);
 
     public boolean givesMentalRestoration(){
@@ -8,6 +10,10 @@ public abstract class Item {
     }
     
     public boolean givesPhysicalRestoration(){
+        return false;
+    }
+
+    public boolean isKey(){
         return false;
     }
 }
