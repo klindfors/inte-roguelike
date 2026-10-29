@@ -172,18 +172,17 @@ public class GuiTest {
 
     @Test
     void level1PlayerBlockedByWall() throws IOException {
-        Game game = level1Game();
+        Game game = startedGame(levelFromFile(LEVEL1), 5, 6);
         Gui gui = new Gui(game);
-        gui.placePlayer(5,5);
-        while (step(game, gui, -1, 0)) { }
+        assertThat(step(game, gui, -1, 0), is(false));
         assertThat(game.getPlayer().getX(), is(5));
+        assertThat(gui.getCell(5, 6), is(".@"));
     }
 
     @Test
     void level1PlayerBlockedByDoor() throws IOException {
-        Game game = level1Game();
+        Game game = startedGame(levelFromFile(LEVEL1), 7, 5);
         Gui gui = new Gui(game);
-        step(game, gui, 0, 1);
         while (step(game, gui, 1, 0)) { }
         assertThat(game.getPlayer().getX(), is(10));
         assertThat(game.getPlayer().getY(), is(5));

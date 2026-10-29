@@ -60,12 +60,13 @@ public class Gui {
         if (!placePlayer(p.getX(), p.getY())) throw new IllegalStateException("Player cannot start at " + p.getX() + "," + p.getY());
     }
 
-    public boolean isLegalStart(int x, int y){ //check that the starting pos of a player is legal; it must be a floor and the room cannot have a staircase..
+    public boolean isLegalStart(int x, int y){ //check that the starting pos of a player is legal; it must be a floor and the room cannot have a staircase.
         if (x < 1 || y < 1 || x >= getWidth() - 1 || y >= getHeight() - 1) return false;
         if (!GuiMap[x][y].equals(".")) return false;
         for (int dx = -1; dx <= 1; dx++){
             for (int dy = -1; dy <= 1; dy++){
-                if (GuiMap[x + dx][y + dy].charAt(0) != '.') return false;
+                String n = GuiMap[x + dx][y + dy];
+                if (!n.equals(".") && !n.equals("#")) return false;
             }
         }
         return !regionHasStaircase(x, y);
