@@ -207,10 +207,14 @@ public class GuiTest {
     }
 
     @ParameterizedTest(name = "{0}: start at {1},{2} was rejected")
-    @CsvSource({"x coordinate outside map, -1, 3",
-            "x coordinate at map border, 0, 5",
-            "y coordinate outside left map, 39, -1",
-            "y coordinate at map border, 37, 0"})
+    @CsvSource({"x coordinate outside of left edge of map, -1, 3",
+            "x coordinate outside of right edge of map, 79, 3",
+            "x coordinate at right border of map, 78, 3",
+            "x coordinate at left border of map, 0, 5",
+            "y coordinate above top of map, 39, -1",
+            "y coordinate at top map border, 37, 0",
+            "y coordinate at bottom edge of map, 3, 21,",
+            "y coordinate outside of bottom edge of map, 4, 22"})
     void illegalCoordinatesInStartPositions(String reason, int x, int y) throws IOException {
         //assert that place player returns false
         Gui gui = new Gui(levelFromFile(LEVEL1));
