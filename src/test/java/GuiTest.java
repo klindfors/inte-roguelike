@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -192,4 +194,16 @@ public class GuiTest {
         LevelMap lvl = levelFromFile(LEVEL1);
         Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, 2, 3)));
     }
+
+    @ParameterizedTest(name = "{0}: start at {1},{2} was rejected")
+    @CsvSource({"wall at starting position, 2, 3",
+            "closed door at starting position, 11, 5",
+            "staircase at starting position, 39, 15",
+            "starting room contains staircase, 35, 13"})
+    void illegalStartPositions(String description, int x, int y) throws IOException {
+        LevelMap lvl = levelFromFile(LEVEL1);
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, x, y)));
+
+    }
+
 }
