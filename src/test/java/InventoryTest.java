@@ -48,7 +48,7 @@ public class InventoryTest {
         player.pickUp(new Consumable(ConsumableType.COFFEE));
         player.pickUp(new Consumable(ConsumableType.COFFEE));
 
-        assertEquals(player.numOfItemsInInv(), 5);
+        assertEquals(player.getNumberOfItemsInInventory(), 5);
 
     }
 
@@ -67,7 +67,7 @@ public class InventoryTest {
         player.pickUp(coffee);
         player.pickUp(key);
 
-        assertEquals(player.numOfItemsInInv(), 2);
+        assertEquals(player.getNumberOfItemsInInventory(), 2);
     }
 
     @Test

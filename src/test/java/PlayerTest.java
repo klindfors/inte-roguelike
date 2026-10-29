@@ -1,68 +1,72 @@
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
 
+    private Player player;
+
+    @BeforeEach
+    void setUp() {
+        player = new Player(2, 3);
+    }
+
     @Test
-    void constructorSetsInitialHealth(){
-        Player player = new Player(2,3);
-        assertEquals(5,player.getPhysicalHealth());
-        assertEquals(5,player.getMentalHealth());
+    void constructorSetsInitialHealth() {
+        assertEquals(5, player.getPhysicalHealth());
+        assertEquals(5, player.getMentalHealth());
     }
 
     @Test
     void mentalBreakdownWhenMentalHealthIsZero() {
-        Player player = new Player(2, 3);
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
     }
 
-    // Tillståndsbaserad testning: kontrollerar övergången
-    // från Mental Breakdown till normalt tillstånd efter återhämtning.
     @Test
     void mentalBreakdownEndsAfterRecovery() {
-        Player player = new Player(2, 3);
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
+
         player.restoreMentalHealth(2);
-        assertFalse(player.isMentalBreakdown());
+        assertFalse(player.hasMentalBreakdown());
     }
 
-    // Tillståndsbaserad testning: kontrollerar att spelaren dör
-    // när den fysiska hälsan når noll.
     @Test
     void playerDiesWhenPhysicalHealthReachesZero() {
-        Player player = new Player(2, 3);
         player.takePhysicalDamage(5);
         assertTrue(player.isDead());
     }
 
-    // Tillståndsbaserad testning: kontrollerar att spelaren
-    // fortfarande lever vid Mental Breakdown.
     @Test
     void playerIsAliveDuringMentalBreakdown() {
-        Player player = new Player(2, 3);
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
         assertFalse(player.isDead());
     }
 
     @Test
     void deadPlayerCannotRestorePhysicalHealth() {
-        Player player = new Player(2, 3);
         player.takePhysicalDamage(5);
         player.restorePhysicalHealth(3);
-        assertEquals(0,player.getPhysicalHealth());
+        assertEquals(0, player.getPhysicalHealth());
         assertTrue(player.isDead());
     }
 
     @Test
     void alivePlayerCanRestorePhysicalHealth() {
-        Player player = new Player(2, 3);
         player.takePhysicalDamage(2);
         player.restorePhysicalHealth(1);
-        assertEquals(4,player.getPhysicalHealth());
+        assertEquals(4, player.getPhysicalHealth());
         assertFalse(player.isDead());
+    }
+
+    @Test
+    void restorePhysicalHealthRejectsNegativeAmount(){
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> player.restorePhysicalHealth(-1)
+        );
     }
 }

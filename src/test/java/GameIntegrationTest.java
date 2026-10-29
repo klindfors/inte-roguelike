@@ -392,7 +392,7 @@ public class GameIntegrationTest {
         assertEquals(GameState.FROZEN, game.getState());
         verify(movement).tryMove(player, gui, 1, 0);
         verify(movement, never()).tryMove(player, gui, 0, 1);
-        assertEquals(1, player.numOfItemsInInv());
+        assertEquals(1, player.getNumberOfItemsInInventory());
     }
 
     @Test
@@ -673,7 +673,7 @@ public class GameIntegrationTest {
                 newPlayer.getPhysicalHealth());
         assertEquals(newPlayer.getMaxMentalHealth(),
                 newPlayer.getMentalHealth());
-        assertEquals(0, newPlayer.numOfItemsInInv());
+        assertEquals(0, newPlayer.getNumberOfItemsInInventory());
 
         // The original game remains lost on level 2.
         assertEquals(GameState.LOST, game.getState());
