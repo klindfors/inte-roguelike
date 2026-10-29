@@ -219,4 +219,12 @@ public class GuiTest {
         assertThat(gui.placePlayer(x, y), is(false));
     }
 
+    @Test
+    void onlyOnePlayerAfterGameStart() throws IOException {
+        Gui gui = new Gui(startedGame(levelFromFile(LEVEL1), 7, 5));
+        assertThat(gui.placePlayer(66, 6), is(false));
+        assertThat(gui.getCell(66, 6), is("."));
+        assertThat(gui.renderGuiMap().chars().filter(c -> c == '@').count(), is(1L));
+    }
+
 }
