@@ -158,6 +158,15 @@ public class GuiTest {
     }
 
     @Test
+    void illegalGame() throws IOException {
+        LevelMap lvl = levelFromFile(Path.of("src/main/resources/oneroomwithstairs.txt"));
+
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(lvl).findStart());
+    }
+
+
+
+    @Test
     void level1PlayerMovesOnFloor() throws IOException {
         Game game = level1Game();
         Gui gui = new Gui(game);
