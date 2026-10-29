@@ -113,6 +113,7 @@ public class Gui {
         if (x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) return false;
         String cell = GuiMap[x][y];
         if (cell.length() != 1 || ".>".indexOf(cell.charAt(0)) < 0) return false;
+        if (!isLegalStart(x, y)) return false;
         push(x, y, '@');
         return true;
     }
