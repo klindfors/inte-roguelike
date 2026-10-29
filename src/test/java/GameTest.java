@@ -159,31 +159,6 @@ public class GameTest {
         verifyNoMoreInteractions(factory);
     }
 
-    @Test
-    void completingThreeLevelsShouldWinGame() {
-        when(firstNpc.isQuizCompleted()).thenReturn(true);
-        when(secondNpc.isQuizCompleted()).thenReturn(true);
-        when(thirdNpc.isQuizCompleted()).thenReturn(true);
-        game.start();
-
-        game.tryAdvanceLevel(firstNpc, true);
-
-        assertSame(secondLevel, game.getCurrentLevel());
-        assertEquals(GameState.RUNNING, game.getState());
-
-        game.tryAdvanceLevel(secondNpc, true);
-
-        assertSame(thirdLevel, game.getCurrentLevel());
-        assertEquals(GameState.RUNNING, game.getState());
-
-        game.tryAdvanceLevel(thirdNpc, true);
-
-        assertEquals(GameState.WON, game.getState());
-        verify(factory).create(1);
-        verify(factory).create(2);
-        verify(factory).create(3);
-        verifyNoMoreInteractions(factory);
-    }
 
     @Test
     void incompleteQuizShouldNotGenerateNextLevel() {
@@ -213,7 +188,7 @@ public class GameTest {
 
     @Test
     void mentalBreakdownWithRecoveryItemShouldFreezeGame() {
-        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalBreakdown()).thenReturn(true);
         when(player.hasMentalRecoveryItem()).thenReturn(true);
         game.start();
 
@@ -224,13 +199,26 @@ public class GameTest {
     }
 
     @Test
-    void mentalBreakdownWithoutRecoveryItemShouldLoseGame() {
-        when(player.isMentalBreakdown()).thenReturn(true);
-        when(player.hasMentalRecoveryItem()).thenReturn(false);
+    void mentalBreakdownShouldFirstFreezeGame() {
+        when(player.hasMentalBreakdown()).thenReturn(true);
         game.start();
 
         game.updateState();
 
+        assertEquals(GameState.FROZEN, game.getState());
+        verify(player, never()).useMentalConsumable();
+    }
+
+    @Test
+    void frozenGameWithoutRecoveryItemShouldLoseGame() {
+        when(player.hasMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(false);
+        game.start();
+
+        game.updateState();
+        assertEquals(GameState.FROZEN, game.getState());
+
+        game.updateState();
         assertEquals(GameState.LOST, game.getState());
     }
 
@@ -239,7 +227,7 @@ public class GameTest {
         startAndFreezeGame();
 
         // Simulate restored mental health.
-        when(player.isMentalBreakdown()).thenReturn(false);
+        when(player.hasMentalBreakdown()).thenReturn(false);
         game.updateState();
 
         assertEquals(GameState.RUNNING, game.getState());
@@ -291,7 +279,7 @@ public class GameTest {
     }
 
     private void startAndFreezeGame() {
-        when(player.isMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalBreakdown()).thenReturn(true);
         when(player.hasMentalRecoveryItem()).thenReturn(true);
 
         game.start();

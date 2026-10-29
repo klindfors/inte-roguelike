@@ -1,4 +1,7 @@
 public abstract class GameCharacter {
+    private static final int DEFAULT_MAX_PHYSICAL_HEALTH = 5;
+    private static final int DEFAULT_MAX_MENTAL_HEALTH = 5;
+
     private int x;
     private int y;
     private int mentalHealth;
@@ -6,13 +9,13 @@ public abstract class GameCharacter {
     private int maxPhysicalHealth;
     private int maxMentalHealth;
 
-    public GameCharacter(int x, int y){
-        this(x, y, 5, 5);
+    public GameCharacter(int x, int y) {
+        this(x, y, DEFAULT_MAX_PHYSICAL_HEALTH, DEFAULT_MAX_MENTAL_HEALTH);
     }
 
-    public GameCharacter(int x, int y, int maxPhysicalHealth, int maxMentalHealth){
-        validateNonNegative(maxPhysicalHealth);
-        validateNonNegative(maxMentalHealth);
+    public GameCharacter(int x, int y, int maxPhysicalHealth, int maxMentalHealth) {
+        requireNonNegative(maxPhysicalHealth);
+        requireNonNegative(maxMentalHealth);
         this.x = x;
         this.y = y;
         this.physicalHealth = maxPhysicalHealth;
@@ -21,11 +24,11 @@ public abstract class GameCharacter {
         this.maxMentalHealth = maxMentalHealth;
     }
 
-    public int getX(){
+    public int getX() {
         return x;
     }
 
-    public int getY(){
+    public int getY() {
         return y;
     }
 
@@ -45,29 +48,29 @@ public abstract class GameCharacter {
         return maxMentalHealth;
     }
 
-    public void takePhysicalDamage(int amount){
-        validateNonNegative(amount);
+    public void takePhysicalDamage(int amount) {
+        requireNonNegative(amount);
         physicalHealth = Math.max(0, physicalHealth - amount);
     }
 
     public void restorePhysicalHealth(int amount) {
-        validateNonNegative(amount);
+        requireNonNegative(amount);
         physicalHealth = Math.min(maxPhysicalHealth, physicalHealth + amount);
     }
 
     public void takeMentalDamage(int amount) {
-        validateNonNegative(amount);
+        requireNonNegative(amount);
         mentalHealth = Math.max(0, mentalHealth - amount);
     }
 
     public void restoreMentalHealth(int amount) {
-        validateNonNegative(amount);
+        requireNonNegative(amount);
         mentalHealth = Math.min(maxMentalHealth, mentalHealth + amount);
     }
 
-    private void validateNonNegative(int amount){
-        if(amount < 0){
-            throw new IllegalArgumentException("Invalid amount");
+    private void requireNonNegative(int value) {
+        if (value < 0) {
+            throw new IllegalArgumentException("Value must be non-negative");
         }
     }
 
@@ -76,9 +79,4 @@ public abstract class GameCharacter {
         y += dy;
     }
 
-
-
-
-
-    //todo:  commands (interact:z, search:s)
 }

@@ -4,7 +4,7 @@ public class PlayerNPCInteraction {
         if (npc.getQuiz() == null) {
             return;
         }
-        if (player.isMentalBreakdown()) {
+        if (player.hasMentalBreakdown()) {
             return;
         }
         boolean isCorrect = npc.answerQuestion(answer);

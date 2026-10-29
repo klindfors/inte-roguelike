@@ -63,7 +63,7 @@ public class PlayerNPCIntegrationTest {
     @Test
     void playerCannotAnswerDuringMentalBreakdown() {
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
 
         interaction.answerQuestion(player, npc, 1);
         assertFalse(npc.isQuizCompleted());
@@ -72,7 +72,7 @@ public class PlayerNPCIntegrationTest {
     @Test
     void playerCanAnswerAfterRecoveringFromMentalBreakdown() {
         player.takeMentalDamage(5);
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
 
         interaction.answerQuestion(player, npc, 1);
         assertFalse(npc.isQuizCompleted());
@@ -89,7 +89,7 @@ public class PlayerNPCIntegrationTest {
         interaction.answerQuestion(player, npc, 1);
 
         assertEquals(0, player.getMentalHealth());
-        assertTrue(player.isMentalBreakdown());
+        assertTrue(player.hasMentalBreakdown());
     }
 
     @Test
