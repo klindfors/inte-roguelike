@@ -216,7 +216,6 @@ public class GuiTest {
             "y coordinate at bottom edge of map, 3, 21,",
             "y coordinate outside of bottom edge of map, 4, 22"})
     void illegalCoordinatesInStartPositions(String reason, int x, int y) throws IOException {
-        //assert that place player returns false
         Gui gui = new Gui(levelFromFile(LEVEL1));
         assertThat(gui.placePlayer(x, y), is(false));
     }
