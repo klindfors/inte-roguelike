@@ -109,9 +109,18 @@ public class Gui {
         return game.getCurrentLevel();
     }
 
+    public boolean hasPlayer(){
+        for (String[] column : GuiMap){
+            for (String cell : column){
+                if (cell.indexOf('@') >= 0) return true;
+            }
+        }
+        return false;
+    }
+
     public boolean placePlayer(int x, int y){
         if (x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) return false;
-        if (!isLegalStart(x, y)) return false;
+        if (hasPlayer() || !isLegalStart(x, y)) return false;
         push(x, y, '@');
         return true;
     }
