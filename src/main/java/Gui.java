@@ -63,12 +63,6 @@ public class Gui {
     public boolean isLegalStart(int x, int y){ //check that the starting pos of a player is legal; it must be a floor and the room cannot have a staircase.
         if (x < 1 || y < 1 || x >= getWidth() - 1 || y >= getHeight() - 1) return false;
         if (!GuiMap[x][y].equals(".")) return false;
-        for (int dx = -1; dx <= 1; dx++){
-            for (int dy = -1; dy <= 1; dy++){
-                String n = GuiMap[x + dx][y + dy];
-                if (!n.equals(".") && !n.equals("#")) return false;
-            }
-        }
         return !regionHasStaircase(x, y);
     }
 
