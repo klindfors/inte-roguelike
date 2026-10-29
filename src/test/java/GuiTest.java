@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -192,4 +194,31 @@ public class GuiTest {
         LevelMap lvl = levelFromFile(LEVEL1);
         Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, 2, 3)));
     }
+
+    @ParameterizedTest(name = "{0}: start at {1},{2} was rejected")
+    @CsvSource({"wall at starting position, 2, 3",
+            "closed door at starting position, 11, 5",
+            "staircase at starting position, 39, 15",
+            "starting room contains staircase, 37, 16"})
+    void illegalTilesInStartPositions(String reason, int x, int y) throws IOException {
+        LevelMap lvl = levelFromFile(LEVEL1);
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, x, y)));
+
+    }
+
+    @ParameterizedTest(name = "{0}: start at {1},{2} was rejected")
+    @CsvSource({"x coordinate outside of left edge of map, -1, 3",
+            "x coordinate outside of right edge of map, 79, 3",
+            "x coordinate at right border of map, 78, 3",
+            "x coordinate at left border of map, 0, 5",
+            "y coordinate above top of map, 39, -1",
+            "y coordinate at top map border, 37, 0",
+            "y coordinate at bottom edge of map, 3, 21,",
+            "y coordinate outside of bottom edge of map, 4, 22"})
+    void illegalCoordinatesInStartPositions(String reason, int x, int y) throws IOException {
+        //assert that place player returns false
+        Gui gui = new Gui(levelFromFile(LEVEL1));
+        assertThat(gui.placePlayer(x, y), is(false));
+    }
+
 }
