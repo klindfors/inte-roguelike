@@ -41,14 +41,21 @@ public class Game {
 
         if (player.isDead()) {
             gameState = GameState.LOST;
-        } else if (player.hasMentalBreakdown()) {
-            if (player.hasMentalRecoveryItem()) {
+            return;
+        }
+
+        if (gameState == GameState.RUNNING) {
+            if (player.hasMentalBreakdown()) {
                 gameState = GameState.FROZEN;
-            } else {
-                gameState = GameState.LOST;
             }
-        } else {
+            return;
+        }
+
+        // The game is already FROZEN.
+        if (!player.hasMentalBreakdown()) {
             gameState = GameState.RUNNING;
+        } else if (!player.hasMentalRecoveryItem()) {
+            gameState = GameState.LOST;
         }
     }
 

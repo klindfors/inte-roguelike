@@ -224,13 +224,27 @@ public class GameTest {
     }
 
     @Test
-    void mentalBreakdownWithoutRecoveryItemShouldLoseGame() {
+    void mentalBreakdownWithoutRecoveryItemShouldFirstFreezeGame() {
         when(player.hasMentalBreakdown()).thenReturn(true);
         when(player.hasMentalRecoveryItem()).thenReturn(false);
         game.start();
 
         game.updateState();
 
+        assertEquals(GameState.FROZEN, game.getState());
+        verify(player, never()).useMentalConsumable();
+    }
+
+    @Test
+    void frozenGameWithoutRecoveryItemShouldLoseGame() {
+        when(player.hasMentalBreakdown()).thenReturn(true);
+        when(player.hasMentalRecoveryItem()).thenReturn(false);
+        game.start();
+
+        game.updateState();
+        assertEquals(GameState.FROZEN, game.getState());
+
+        game.updateState();
         assertEquals(GameState.LOST, game.getState());
     }
 

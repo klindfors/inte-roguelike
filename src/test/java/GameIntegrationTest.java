@@ -93,7 +93,7 @@ public class GameIntegrationTest {
     }
 
     @Test
-    void wrongAnswersWithoutRecoveryItemShouldLoseGame() {
+    void wrongAnswersWithoutRecoveryItemShouldFreezeThenLoseGame() {
         NPC npc = new NPC(1, 1, "Answer the question", createQuestion());
         game.start();
 
@@ -101,6 +101,10 @@ public class GameIntegrationTest {
 
         assertEquals(0, player.getMentalHealth());
         assertFalse(npc.isQuizCompleted());
+        assertEquals(GameState.FROZEN, game.getState());
+
+        game.updateState();
+
         assertEquals(GameState.LOST, game.getState());
     }
 
@@ -591,6 +595,89 @@ public class GameIntegrationTest {
         verifyNoInteractions(actions);
         verifyNoInteractions(movement);
         verifyNoInteractions(factory);
+    }
+
+    @Test
+    void completingAllQuestionsShouldKeepGameRunningAndCompleteQuiz() {
+        Quiz firstQuestion = createQuestion();
+        Quiz secondQuestion = new Quiz(
+                "What is 2 + 2?",
+                new String[]{"4", "5"},
+                0,
+                Difficulty.values()[0]
+        );
+
+        NPC npc = new NPC(
+                1, 1, "Answer both questions",
+                new ArrayList<>(List.of(firstQuestion, secondQuestion))
+        );
+
+        game.start();
+
+        interaction.answerQuestion(player, npc, 0);
+        game.updateState();
+
+        assertFalse(npc.isQuizCompleted());
+        assertSame(secondQuestion, npc.getQuiz());
+        assertEquals(GameState.RUNNING, game.getState());
+
+        interaction.answerQuestion(player, npc, 0);
+        game.updateState();
+
+        assertTrue(npc.isQuizCompleted());
+        assertNull(npc.getQuiz());
+        assertEquals(GameState.RUNNING, game.getState());
+        assertSame(firstLevel, game.getCurrentLevel());
+    }
+
+    @Test
+    void newGameAfterLossShouldStartAtLevelOneWithNewPlayer() {
+        // Reach level 2 in the original game.
+        NPC npc = mock(NPC.class);
+        when(npc.isQuizCompleted()).thenReturn(true);
+
+        game.start();
+        game.tryAdvanceLevel(npc, true);
+
+        assertSame(secondLevel, game.getCurrentLevel());
+
+        // Lose the original game.
+        player.takePhysicalDamage(5);
+        game.updateState();
+
+        assertEquals(GameState.LOST, game.getState());
+
+        // Create a new player and game.
+        Player newPlayer = new Player(0, 0);
+        LevelMapFactory newFactory = mock(LevelMapFactory.class);
+        LevelMap newFirstLevel = mock(LevelMap.class);
+
+        when(newFactory.create(1)).thenReturn(newFirstLevel);
+
+        Game newGame = new Game(newPlayer, newFactory);
+
+        assertEquals(GameState.NOT_STARTED, newGame.getState());
+        verifyNoInteractions(newFactory);
+
+        newGame.start();
+
+        // The new playthrough starts at level 1.
+        verify(newFactory).create(1);
+        verifyNoMoreInteractions(newFactory);
+
+        assertSame(newFirstLevel, newGame.getCurrentLevel());
+        assertSame(newPlayer, newGame.getPlayer());
+        assertNotSame(player, newGame.getPlayer());
+        assertEquals(GameState.RUNNING, newGame.getState());
+        assertEquals(newPlayer.getMaxPhysicalHealth(),
+                newPlayer.getPhysicalHealth());
+        assertEquals(newPlayer.getMaxMentalHealth(),
+                newPlayer.getMentalHealth());
+        assertEquals(0, newPlayer.numOfItemsInInv());
+
+        // The original game remains lost on level 2.
+        assertEquals(GameState.LOST, game.getState());
+        assertSame(secondLevel, game.getCurrentLevel());
     }
 
 
