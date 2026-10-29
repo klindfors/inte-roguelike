@@ -200,10 +200,21 @@ public class GuiTest {
             "closed door at starting position, 11, 5",
             "staircase at starting position, 39, 15",
             "starting room contains staircase, 37, 16"})
-    void illegalTilesInStartPositions(String description, int x, int y) throws IOException {
+    void illegalTilesInStartPositions(String reason, int x, int y) throws IOException {
         LevelMap lvl = levelFromFile(LEVEL1);
         Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, x, y)));
 
+    }
+
+    @ParameterizedTest(name = "{0}: start at {1},{2} was rejected")
+    @CsvSource({"x coordinate outside map, -1, 3",
+            "x coordinate at map border, 0, 5",
+            "y coordinate outside left map, 39, -1",
+            "y coordinate at map border, 37, 0"})
+    void illegalCoordinatesInStartPositions(String reason, int x, int y) throws IOException {
+        //assert that place player returns false
+        Gui gui = new Gui(levelFromFile(LEVEL1));
+        assertThat(gui.placePlayer(x, y), is(false));
     }
 
 }
