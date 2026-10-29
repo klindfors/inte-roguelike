@@ -200,7 +200,7 @@ public class GuiTest {
             "closed door at starting position, 11, 5",
             "staircase at starting position, 39, 15",
             "starting room contains staircase, 37, 16"})
-    void illegalStartPositions(String description, int x, int y) throws IOException {
+    void illegalTilesInStartPositions(String description, int x, int y) throws IOException {
         LevelMap lvl = levelFromFile(LEVEL1);
         Assertions.assertThrows(IllegalStateException.class, () -> new Gui(startedGame(lvl, x, y)));
 
