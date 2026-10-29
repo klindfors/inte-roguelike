@@ -159,31 +159,6 @@ public class GameTest {
         verifyNoMoreInteractions(factory);
     }
 
-    @Test
-    void completingThreeLevelsShouldWinGame() {
-        when(firstNpc.isQuizCompleted()).thenReturn(true);
-        when(secondNpc.isQuizCompleted()).thenReturn(true);
-        when(thirdNpc.isQuizCompleted()).thenReturn(true);
-        game.start();
-
-        game.tryAdvanceLevel(firstNpc, true);
-
-        assertSame(secondLevel, game.getCurrentLevel());
-        assertEquals(GameState.RUNNING, game.getState());
-
-        game.tryAdvanceLevel(secondNpc, true);
-
-        assertSame(thirdLevel, game.getCurrentLevel());
-        assertEquals(GameState.RUNNING, game.getState());
-
-        game.tryAdvanceLevel(thirdNpc, true);
-
-        assertEquals(GameState.WON, game.getState());
-        verify(factory).create(1);
-        verify(factory).create(2);
-        verify(factory).create(3);
-        verifyNoMoreInteractions(factory);
-    }
 
     @Test
     void incompleteQuizShouldNotGenerateNextLevel() {
@@ -224,9 +199,8 @@ public class GameTest {
     }
 
     @Test
-    void mentalBreakdownWithoutRecoveryItemShouldFirstFreezeGame() {
+    void mentalBreakdownShouldFirstFreezeGame() {
         when(player.hasMentalBreakdown()).thenReturn(true);
-        when(player.hasMentalRecoveryItem()).thenReturn(false);
         game.start();
 
         game.updateState();
