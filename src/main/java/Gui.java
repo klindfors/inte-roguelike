@@ -106,7 +106,6 @@ public class Gui {
     }
 
     private static LevelMap levelOf(Game game){
-        if (game.getCurrentLevel() == null) throw new IllegalStateException("Game has not been started");
         return game.getCurrentLevel();
     }
 
