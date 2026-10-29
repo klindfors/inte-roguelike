@@ -158,6 +158,15 @@ public class GuiTest {
     }
 
     @Test
+    void illegalGame() throws IOException {
+        LevelMap lvl = levelFromFile(Path.of("src/main/resources/oneroomwithstairs.txt"));
+
+        Assertions.assertThrows(IllegalStateException.class, () -> new Gui(lvl).findStart());
+    }
+
+
+
+    @Test
     void level1PlayerMovesOnFloor() throws IOException {
         Game game = level1Game();
         Gui gui = new Gui(game);
@@ -172,18 +181,17 @@ public class GuiTest {
 
     @Test
     void level1PlayerBlockedByWall() throws IOException {
-        Game game = level1Game();
+        Game game = startedGame(levelFromFile(LEVEL1), 5, 6);
         Gui gui = new Gui(game);
-        gui.placePlayer(5,5);
-        while (step(game, gui, -1, 0)) { }
+        assertThat(step(game, gui, -1, 0), is(false));
         assertThat(game.getPlayer().getX(), is(5));
+        assertThat(gui.getCell(5, 6), is(".@"));
     }
 
     @Test
     void level1PlayerBlockedByDoor() throws IOException {
-        Game game = level1Game();
+        Game game = startedGame(levelFromFile(LEVEL1), 7, 5);
         Gui gui = new Gui(game);
-        step(game, gui, 0, 1);
         while (step(game, gui, 1, 0)) { }
         assertThat(game.getPlayer().getX(), is(10));
         assertThat(game.getPlayer().getY(), is(5));
@@ -218,6 +226,14 @@ public class GuiTest {
     void illegalCoordinatesInStartPositions(String reason, int x, int y) throws IOException {
         Gui gui = new Gui(levelFromFile(LEVEL1));
         assertThat(gui.placePlayer(x, y), is(false));
+    }
+
+    @Test
+    void onlyOnePlayerAfterGameStart() throws IOException {
+        Gui gui = new Gui(startedGame(levelFromFile(LEVEL1), 7, 5));
+        assertThat(gui.placePlayer(66, 6), is(false));
+        assertThat(gui.getCell(66, 6), is("."));
+        assertThat(gui.renderGuiMap().chars().filter(c -> c == '@').count(), is(1L));
     }
 
 }

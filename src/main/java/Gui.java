@@ -60,14 +60,9 @@ public class Gui {
         if (!placePlayer(p.getX(), p.getY())) throw new IllegalStateException("Player cannot start at " + p.getX() + "," + p.getY());
     }
 
-    public boolean isLegalStart(int x, int y){ //check that the starting pos of a player is legal; it must be a floor and the room cannot have a staircase..
+    public boolean isLegalStart(int x, int y){ //check that the starting pos of a player is legal; it must be a floor and the room cannot have a staircase.
         if (x < 1 || y < 1 || x >= getWidth() - 1 || y >= getHeight() - 1) return false;
         if (!GuiMap[x][y].equals(".")) return false;
-        for (int dx = -1; dx <= 1; dx++){
-            for (int dy = -1; dy <= 1; dy++){
-                if (GuiMap[x + dx][y + dy].charAt(0) != '.') return false;
-            }
-        }
         return !regionHasStaircase(x, y);
     }
 
@@ -105,13 +100,21 @@ public class Gui {
     }
 
     private static LevelMap levelOf(Game game){
-        if (game.getCurrentLevel() == null) throw new IllegalStateException("Game has not been started");
         return game.getCurrentLevel();
+    }
+
+    public boolean hasPlayer(){
+        for (String[] column : GuiMap){
+            for (String cell : column){
+                if (cell.indexOf('@') >= 0) return true;
+            }
+        }
+        return false;
     }
 
     public boolean placePlayer(int x, int y){
         if (x < 0 || y < 0 || x >= getWidth() || y >= getHeight()) return false;
-        if (!isLegalStart(x, y)) return false;
+        if (hasPlayer() || !isLegalStart(x, y)) return false;
         push(x, y, '@');
         return true;
     }

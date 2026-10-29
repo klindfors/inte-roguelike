@@ -39,7 +39,9 @@ public class RoomTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"777", "555", "6", "900", "68","5", "9879", "234232", "99373773", "9999", "2000", "666"})
+    @CsvSource({"1","77333337", "555", "6",
+            "900", "68","5", "9879", "234232",
+            "99373773", "9999", "2000", "666"})
     void edgesAreWallsOrDoors(int seed) {
         Room testRoom777 = new Room("test", 4,8, new Random(seed));
         int w = testRoom777.getWidth();
@@ -85,7 +87,7 @@ public class RoomTest {
     void atLeastOneDoorOnNonCorner() {
         int w = 5;
         int h = 8;
-        for (int seed = 0; seed < 500; seed++) {//check rooms for many different seeds; all must have reachable door.
+        for (int seed = 0; seed < 99999999; seed+=500) {//check rooms for many different seeds; all must have reachable door.
             Room r = new Room("test", w, h, new Random(seed));
             boolean found = false;
             for (int x = 0; x < w; x++) {
