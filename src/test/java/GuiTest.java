@@ -251,4 +251,18 @@ public class GuiTest {
         assertThat(gui.isLegalStart(36, 5), is(false));
     }
 
+    @Test
+    void validStartPositionAccepted() {
+        Gui gui = new Gui(LEVEL1);
+
+        // Verify that the starting position is legal
+        assertThat(gui.isLegalStart(5, 3), is(true));
+
+        // Verify that the player can be placed there
+        assertThat(gui.placePlayer(5, 3), is(true));
+
+        // Verify that the player is placed on the floor
+        assertThat(gui.getCell(5, 3), is(".@"));
+    }
+
 }
