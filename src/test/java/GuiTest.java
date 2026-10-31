@@ -236,4 +236,33 @@ public class GuiTest {
         assertThat(gui.renderGuiMap().chars().filter(c -> c == '@').count(), is(1L));
     }
 
+    @Test
+    void playerCannotStartOnCoffeeMachine() {
+        Gui gui = new Gui(LEVEL1);
+
+        // Verify that the original start position is valid
+        assertThat(gui.getCell(36, 5), is("."));
+        assertThat(gui.isLegalStart(36, 5), is(true));
+
+        // Place a coffee machine at the start position
+        gui.GuiMap[36][5] = "C";
+
+        // Verify that the player cannot start on a coffee machine
+        assertThat(gui.isLegalStart(36, 5), is(false));
+    }
+
+    @Test
+    void validStartPositionAccepted() {
+        Gui gui = new Gui(LEVEL1);
+
+        // Verify that the starting position is legal
+        assertThat(gui.isLegalStart(5, 3), is(true));
+
+        // Verify that the player can be placed there
+        assertThat(gui.placePlayer(5, 3), is(true));
+
+        // Verify that the player is placed on the floor
+        assertThat(gui.getCell(5, 3), is(".@"));
+    }
+
 }
